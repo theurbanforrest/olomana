@@ -1,15 +1,13 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 # Olomana
 A digital product starter based on ReactJS and Firebase
 BIG props to [Robin Wieruch's starter guide][https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth]
 
 ### Getting Started
 
-##### Firebase
+##### Configure Firebase
 
 Create a new `.env.local` file in project's root with your Firebase creds:
-`
+```bash
 	REACT_APP_API_KEY=xxx
 	REACT_APP_AUTH_DOMAIN=xxx
 	REACT_APP_DATABASE_URL=xxx
@@ -18,11 +16,13 @@ Create a new `.env.local` file in project's root with your Firebase creds:
 	REACT_APP_MESSAGING_SENDER_ID=xxx
 	REACT_APP_APP_ID=xxx
 	REACT_APP_MEASUREMENT_ID=xxx
-`
+```
 
 These come straight from the Firebase console's settings. You need to convert from JSON to these REACT_APP_ prefixed vars.
 
-##### App
+##### Run Locally
+
+Now you can run the app locally:
 
 ```bash
 npm install
