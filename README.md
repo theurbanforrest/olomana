@@ -1,6 +1,6 @@
 # Olomana
 A digital product starter based on ReactJS and Firebase
-BIG props to [Robin Wieruch's starter guide][https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth]
+BIG props to Robin Wieruch's starter guide: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth
 
 ### Getting Started
 
