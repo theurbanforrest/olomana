@@ -1,20 +1,24 @@
+/// INDEX.JS
+/// This is the Global context of the web app
+
+
+/// Imports, singletons
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import Welcome from './views/Welcome';
+import Firebase, { FirebaseContext } from './backend/firebase';
 
-
-
-// ReactDOM.render(<App />, document.getElementById('root'));
-
+/// Imports, all other
+import App from './App.js';
 
 
 ReactDOM.render(
-	<Welcome
-		headline='My Headline'
-		ctaName='My CTA'
-	/>,
+	<FirebaseContext.Provider value={new Firebase()}>
+		<App
+			headline='My Headline'
+			ctaName='My CTA'
+		/>
+	</FirebaseContext.Provider>,
 	document.getElementById('root')
 );
 
