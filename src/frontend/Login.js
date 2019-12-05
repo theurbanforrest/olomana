@@ -6,7 +6,7 @@ import { SignUpLink } from './SignUp';
 import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 
-const LoginPage = () => (
+const LoginPage = () => (  
   <div>
     <h1>Login</h1>
     <LoginForm />

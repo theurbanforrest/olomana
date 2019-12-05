@@ -2,7 +2,6 @@
 
 import React from 'react';
 import PureButton from './pure/PureButton';
-import  { FirebaseContext } from '../backend/firebase';
 
 class Welcome extends React.Component {
   render() {
@@ -13,11 +12,6 @@ class Welcome extends React.Component {
         <PureButton
           title={this.props.ctaName}
         />
-        <FirebaseContext.Consumer>
-          {firebase => {
-            return <div>I've access to Firebase and render something.</div>;
-          }}
-        </FirebaseContext.Consumer>
       </div>
 
 

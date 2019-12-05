@@ -6,7 +6,6 @@ import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 
 
-
 const SignUpPage = () => (
   <div>
     <h1>SignUp</h1>
