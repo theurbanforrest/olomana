@@ -11,10 +11,14 @@ import Welcome from './frontend/Welcome';
 import SignUp from './frontend/SignUp';
 import Login from './frontend/Login';
 
-import PureNavBar from './frontend/pure/PureNavBar';
+import Navigation from './frontend/Navigation';
 import * as ROUTES from './constants/routes';
 
 import { withFirebase } from './backend/firebase';
+import {
+  AuthUserContext,
+  withAuthentication
+} from './backend/session';
 
 
 class App extends Component {
@@ -35,14 +39,10 @@ class App extends Component {
 
   render(){
     return (
+      <AuthUserContext.Provider value={this.state.authUser}>
         <Router>
           <div>
-            <PureNavBar
-
-              routes={ROUTES}
-              authenticated={this.state.authUser}
-
-            />
+            <Navigation />
             <hr />
             <Route exact path={ROUTES.LANDING} component={Welcome} />
             <Route path={ROUTES.LOGIN} component={Login} />
@@ -50,6 +50,7 @@ class App extends Component {
             <Route path={ROUTES.SIGN_UP} component={SignUp} />
           </div>
         </Router>
+      </AuthUserContext.Provider>
     );
   } 
 

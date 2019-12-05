@@ -1,12 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import PureSignOutButton from './frontend/pure/PureSignOutButton';
+import PureSignOutButton from './pure/PureSignOutButton';
+import { AuthUserContext } from '../backend/session';
 import * as ROUTES from '../constants/routes';
 
-const Navigation = ({ authUser }) => (
-  <div>{authUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>
+const Navigation = () => (
+  <div>
+    <AuthUserContext.Consumer>
+      {authUser =>
+        authUser ? <NavigationAuth /> : <NavigationNonAuth />
+      }
+    </AuthUserContext.Consumer>
+  </div>
 );
+
 const NavigationAuth = () => (
   <ul>
     <li>
@@ -29,7 +37,7 @@ const NavigationNonAuth = () => (
       <Link to={ROUTES.LANDING}>Landing</Link>
     </li>
     <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+      <Link to={ROUTES.LOGIN}>Login</Link>
     </li>
   </ul>
 );
