@@ -5,4 +5,7 @@ import FirebaseContext, {
 
 
 export default Firebase;
-export { FirebaseContext, withFirebase };
+export {
+	FirebaseContext,
+	withFirebase
+};
