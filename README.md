@@ -29,13 +29,20 @@ npm install
 npm start
 ```
 
-App is now open on https://localhost:3000
+* App is now open on https://localhost:3000
+* Sign Up, Log In functions are connected to your Firebase project.  You can see new users getting added in Authentication.
+* Adding a user also logs a record in your Real-Time Database (RTD).
 
-### Open Source
+* /account and /home are only shown if you are logged in.  Else you get redirected back to /login.
+* /admin shows a list of all users, pulled from the RTD.
+
+
+### Mahalo Open Source!
 
 * create-react-app
 * react-router-dom
 * recompose
 * firebase
+* 
 
 
