@@ -12,11 +12,13 @@ import {
 
 /// Views
 ///
-import Welcome from './frontend/Welcome';
+import Landing from './frontend/Landing';
 import SignUp from './frontend/SignUp';
 import Login from './frontend/Login';
 import PasswordForget from './frontend/PasswordForget';
 import Account from './frontend/Account';
+import Home from './frontend/Home';
+import Admin from './frontend/Admin';
 
 
 /// Navigation
@@ -29,8 +31,7 @@ import * as ROUTES from './constants/routes';
 ///
 import { withFirebase } from './backend/firebase';
 import {
-  AuthUserContext,
-  withAuthentication
+  AuthUserContext
 } from './backend/session';
 
 
@@ -60,12 +61,13 @@ class App extends Component {
           <div>
             <Navigation />
             <hr />
-            <Route exact path={ROUTES.LANDING} component={Welcome} />
+            <Route exact path={ROUTES.LANDING} component={Landing} />
             <Route path={ROUTES.LOGIN} component={Login} />
-            <Route path={ROUTES.HOME} component={Welcome} />
+            <Route path={ROUTES.HOME} component={Home} />
             <Route path={ROUTES.SIGN_UP} component={SignUp} />
             <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
             <Route path={ROUTES.ACCOUNT} component={Account} />
+            <Route path={ROUTES.ADMIN} component={Admin} />
           </div>
         </Router>
       </AuthUserContext.Provider>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withAuthorization } from '../Session';
+import { withAuthorization } from '../backend/session';
 const HomePage = () => (
   <div>
     <h1>Home Page</h1>
