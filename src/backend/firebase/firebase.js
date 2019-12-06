@@ -28,6 +28,7 @@
 	    this.auth = app.auth();
 
 	    //3. Database
+	    this.db = app.database();
 	    //x. Export
 
 	    console.log('class Firebase constructor() end');
