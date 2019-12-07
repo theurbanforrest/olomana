@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import {} from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+
 
 class ViewAllThreadsPage extends Component {
   constructor(props) {
@@ -8,6 +11,7 @@ class ViewAllThreadsPage extends Component {
     this.state = {
       loading: false,
       threads: [],
+      error: null
     };
   }
 
@@ -17,16 +21,48 @@ class ViewAllThreadsPage extends Component {
       .fsThreads()
       .get()
       .then(
-        snapshot => {
+        querySnapshot => {
 
-          let x = snapshot.docs.map(doc => doc.data())
-          this.setState({
-            threads: x,
+          //Firestore is unable to get us the path as part of .data()
+          //So we need to get it ourselves
+
+          let DocsArray = [];
+          for(let i=0;i<querySnapshot.docs.length;i++){
+
+            let x = {};
+
+            x.path = querySnapshot.docs[i].id;
+            x.data = querySnapshot.docs[i].data();
+
+            DocsArray.push(x);
+
+          }
+
+          return DocsArray;
+        
+          /*** This is the query to get all the doc data WITHOUT path
+          //much simpler but it does not satisfy the reqs
+
+          return querySnapshot.docs.map(
+            doc => doc.data())
+
+          */
+          
+        }
+      )
+      .then( s => {
+
+        this.setState({
+            threads: s,
             loading: false
 
           })
-        }
-      )
+
+        /*** useful debugger message
+          alert('this.state is now ' + JSON.stringify(this.state));
+        ***/
+
+      })
       .catch(
         err => {
           this.setState({error: err})
@@ -38,7 +74,7 @@ class ViewAllThreadsPage extends Component {
   }
 
   render() {
-    const { threads, loading } = this.state;
+    const { error, threads, loading } = this.state;
 
     return (
 
@@ -47,6 +83,7 @@ class ViewAllThreadsPage extends Component {
           <div>
             <h1>ViewAllThreads</h1>
             {loading && <div>Loading ...</div>}
+            {error && error.message}
             <ThreadList threads={threads} />
           </div>
         )}
@@ -58,15 +95,18 @@ class ViewAllThreadsPage extends Component {
 const ThreadList = ({ threads }) => (
   <ul>
     {threads.map(thread => (
-      <li key={thread.uid}>
+      <li key={thread.price}>
         <span>
-          <strong>ID:</strong> {thread.uid}
+          <strong>Path:</strong> {thread.path}
         </span>
         <span>
-          <strong>Headline:</strong> {thread.headline}
+          <strong>Headline:</strong> {thread.data.headline}
         </span>
         <span>
-          <strong>Price:</strong> {thread.price}
+          <strong>Price:</strong> {thread.data.price}
+        </span>
+        <span>
+          <Link to={`thread/${thread.path}`}> View </Link>
         </span>
       </li>
     ))}

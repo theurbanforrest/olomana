@@ -14,7 +14,31 @@ class DashboardPage extends Component {
   }
   componentDidMount() {
 
-    ///
+    this.setState({ loading: true });
+    this.props.firebase
+      .fsThreads()
+      .get()
+      .then(
+        snapshot => {
+
+          return snapshot.docs.map(doc => doc.data())
+          
+        }
+      )
+      .then( s => {
+
+        this.setState({
+            threads: s,
+            loading: false
+
+          })
+
+      })
+      .catch(
+        err => {
+          this.setState({error: err})
+        }
+      )
   }
   componentWillUnmount() {
 
@@ -34,6 +58,7 @@ class DashboardPage extends Component {
 
               <h5>My Threads</h5>
               {loading && <div>Loading ...</div>}
+              
               <MyThreadList
                 userUid={authUser.uid}
               />

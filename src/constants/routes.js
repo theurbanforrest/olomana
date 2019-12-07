@@ -13,14 +13,13 @@ export const PASSWORD_FORGET = '/pw-forget';
 export const VIEW_ALL_THREADS = '/threads';
 
 
-
-
 /// Protected + static
 export const HOME = '/home';
 
 /// Protected + real-time database
 export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
+export const THREAD = '/thread/:uid';
 
 /// Protected + firestore
 export const DASHBOARD = '/dashboard';

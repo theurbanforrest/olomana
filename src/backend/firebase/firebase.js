@@ -60,13 +60,12 @@
 	  			user = uid => this.db.ref(`users/${uid}`);
 	  			users = () => this.db.ref('users');
 
-	  		// *** Threads ***
-	  			thread = uid => this.db.ref(`threads/${uid}`);
-	  			threads = () => this.db.ref('threads');
 
   		// *** Firestore Database API ***
 
-  			fsThreadByUser = uid => this.firestore.collection(`threads`).where('userUid','==',`${uid}`);	
+  			fsThread = uid => this.firestore.collection(`threads`).doc(`${uid}`);
+
+  			fsThreadsByUser = uid => this.firestore.collection(`threads`).where('userUid','==',`${uid}`);	
   			fsThreads = () => this.firestore.collection(`threads`);
 
 	}
