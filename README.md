@@ -48,4 +48,9 @@ npm start
 
 * We use this git branching model for version control: https://nvie.com/posts/a-successful-git-branching-model/
 
+##### Current branches
+
+* `master`: completion of Robin Wieruch's tutorial
+* `develop`: Create Thread capability
+* `feature/v1-posts`: WIP on View All & View My
 
