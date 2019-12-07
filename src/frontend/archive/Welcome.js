@@ -1,7 +1,7 @@
 /// This is a "smart" view that handles its own lifecycle & state
 
 import React from 'react';
-import PureButton from './pure/PureButton';
+import PureButton from './PureButton';
 
 class Welcome extends React.Component {
   render() {

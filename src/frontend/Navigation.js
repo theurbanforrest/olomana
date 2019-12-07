@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import PureSignOutButton from './pure/PureSignOutButton';
 import { AuthUserContext } from '../backend/session';
 import * as ROUTES from '../constants/routes';
+import SignOutButton from './SignOutButton';
 
 const Navigation = () => (
   <div>
@@ -29,9 +29,12 @@ const NavigationAuth = () => (
     <li>
       <Link to={ROUTES.ADMIN}>Admin</Link>
     </li>
+    <li>
+      <Link to={ROUTES.CREATE_THREAD}>Create Thread</Link>
+    </li>
 
     <li>
-      <PureSignOutButton />
+      <SignOutButton />
     </li>
   </ul>
 );
@@ -45,4 +48,5 @@ const NavigationNonAuth = () => (
     </li>
   </ul>
 );
+
 export default Navigation;
