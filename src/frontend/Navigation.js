@@ -16,9 +16,16 @@ const Navigation = () => (
 );
 
 const NavigationAuth = () => (
+  <div class="navigation">
   <ul>
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.DASHBOARD}>Dashboard</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.VIEW_ALL_THREADS}>View All</Link>
     </li>
     <li>
       <Link to={ROUTES.HOME}>Home</Link>
@@ -37,6 +44,7 @@ const NavigationAuth = () => (
       <SignOutButton />
     </li>
   </ul>
+  </div>
 );
 const NavigationNonAuth = () => (
   <ul>

@@ -55,8 +55,8 @@ class CreateThreadFormBase extends Component {
       let status = 1;
 
       this.props.firebase
-        .threads()
-        .push({
+        .fsThreads()
+        .add({
 
           //indexables
           utc,

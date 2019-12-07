@@ -4,6 +4,7 @@
 	import app from 'firebase/app';
 		import 'firebase/auth';
 		import 'firebase/database';
+		import 'firebase/firestore';
 
 	const firebaseConfig = {
 	  apiKey: process.env.REACT_APP_API_KEY,
@@ -30,6 +31,10 @@
 
 	    //3. Database
 	    this.db = app.database();
+
+	    //4. Firestore
+	    this.firestore = app.firestore();
+
 	    //x. Export
 
 	    console.log('class Firebase constructor() end');
@@ -56,7 +61,13 @@
 	  			users = () => this.db.ref('users');
 
 	  		// *** Threads ***
+	  			thread = uid => this.db.ref(`threads/${uid}`);
 	  			threads = () => this.db.ref('threads');
+
+  		// *** Firestore Database API ***
+
+  			fsThread = uid => this.firestore.collection(`threads`).where('userUid','==',`${uid}`);	
+  			fsThreads = () => this.firestore.collection(`threads`);
 
 	}
 

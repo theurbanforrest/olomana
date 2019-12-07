@@ -10,28 +10,31 @@ class ViewAllThreadsPage extends Component {
       threads: [],
     };
   }
+
   componentDidMount() {
     this.setState({ loading: true });
-    this.props.firebase.threads().on('value', snapshot => {
+    this.props.firebase
+      .fsThreads()
+      .get()
+      .then(
+        snapshot => {
 
-      const threadsObject = snapshot.val();
-      const threadsList = Object.keys(threadsObject).map(key => ({
+          let x = snapshot.docs.map(doc => doc.data())
+          this.setState({
+            threads: x,
+            loading: false
 
-        //map everything from threadsObject into a list
-        ...threadsObject[key],
-
-        //note what the key is.  i.e. for /threads it is id.  e.g. for /users it is uid.
-        uid: key,
-      }));
-
-      this.setState({
-        threads: threadsList,
-        loading: false,
-      });
-    });
+          })
+        }
+      )
+      .catch(
+        err => {
+          this.setState({error: err})
+        }
+      )
   }
   componentWillUnmount() {
-    this.props.firebase.threads().off();
+    ///
   }
 
   render() {
@@ -74,5 +77,4 @@ const ThreadList = ({ threads }) => (
 // So set authUser => true
 
 const condition = authUser => true; //!!authUser;
-
 export default withAuthorization(condition)(ViewAllThreadsPage);
