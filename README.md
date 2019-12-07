@@ -43,6 +43,9 @@ npm start
 * react-router-dom
 * recompose
 * firebase
-* 
+
+### Contributing
+
+* We use this git branching model for version control: https://nvie.com/posts/a-successful-git-branching-model/
 
 
