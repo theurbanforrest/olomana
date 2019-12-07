@@ -1,76 +1,78 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { withFirebase } from '../backend/firebase';
-import * as ROUTES from '../constants/routes';
-import { compose } from 'recompose';
+import {} from '../backend/firebase';
+import { withAuthorization, AuthUserContext } from '../backend/session';
 
-
-
-const ViewAllThreadsPage = () => (  
-  <div>
-    <h1>ViewAllThreads</h1>
-    <ViewAllThreadsForm />
-    <SignUpLink />
-    <PasswordForgetLink />
-  </div>
-);
-const INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null,
-};
-class ViewAllThreadsBase extends Component {
+class ViewAllThreadsPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...INITIAL_STATE };
+    this.state = {
+      loading: false,
+      threads: [],
+    };
   }
-  onSubmit = event => {
-    const { email, password } = this.state;
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
+  componentDidMount() {
+    this.setState({ loading: true });
+    this.props.firebase.threads().on('value', snapshot => {
+
+      const threadsObject = snapshot.val();
+      const threadsList = Object.keys(threadsObject).map(key => ({
+
+        //map everything from threadsObject into a list
+        ...threadsObject[key],
+
+        //note what the key is.  i.e. for /threads it is id.  e.g. for /users it is uid.
+        uid: key,
+      }));
+
+      this.setState({
+        threads: threadsList,
+        loading: false,
       });
-    event.preventDefault();
-  };
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
+    });
+  }
+  componentWillUnmount() {
+    this.props.firebase.threads().off();
+  }
+
   render() {
-    const { email, password, error } = this.state;
-    const isInvalid = password === '' || email === '';
+    const { threads, loading } = this.state;
+
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
-        {error && <p>{error.message}</p>}
-      </form>
+
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <div>
+            <h1>ViewAllThreads</h1>
+            {loading && <div>Loading ...</div>}
+            <ThreadList threads={threads} />
+          </div>
+        )}
+      </AuthUserContext.Consumer>
     );
   }
 }
-const ViewAllThreads = compose(
-  withRouter,
-  withFirebase,
-)(ViewAllThreadsBase);
 
-export default ViewAllThreadsPage;
-export { ViewAllThreads };
+const ThreadList = ({ threads }) => (
+  <ul>
+    {threads.map(thread => (
+      <li key={thread.uid}>
+        <span>
+          <strong>ID:</strong> {thread.uid}
+        </span>
+        <span>
+          <strong>Headline:</strong> {thread.headline}
+        </span>
+        <span>
+          <strong>Price:</strong> {thread.price}
+        </span>
+      </li>
+    ))}
+  </ul>
+);
+
+// This is public currently but let's keep the option of having it protected
+// So set authUser => true
+
+const condition = authUser => true; //!!authUser;
+
+export default withAuthorization(condition)(ViewAllThreadsPage);

@@ -8,3 +8,5 @@ export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/pw-forget';
 export const CREATE_THREAD = '/create-thread';
+
+export const VIEW_ALL_THREADS = '/threads';

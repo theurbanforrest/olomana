@@ -5,7 +5,9 @@ import { withFirebase } from '../firebase';
 import AuthUserContext from './context';
 
 import * as ROUTES from '../../constants/routes';
+
 const withAuthorization = condition => Component => {
+
   class WithAuthorization extends React.Component {
     componentDidMount() {
       this.listener = this.props.firebase.auth.onAuthStateChanged(
@@ -33,5 +35,6 @@ const withAuthorization = condition => Component => {
     withRouter,
     withFirebase,
   )(WithAuthorization);
+  
 };
 export default withAuthorization;

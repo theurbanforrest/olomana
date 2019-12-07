@@ -20,6 +20,7 @@ import Account from './frontend/Account';
 import Home from './frontend/Home';
 import Admin from './frontend/Admin';
 import CreateThread from './frontend/CreateThread';
+import ViewAllThreads from './frontend/ViewAllThreads';
 
 
 /// Navigation
@@ -71,6 +72,7 @@ class App extends Component {
             <Route path={ROUTES.ADMIN} component={Admin} />
 
             <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
+            <Route path={ROUTES.VIEW_ALL_THREADS} component={ViewAllThreads} />
           </div>
         </Router>
       </AuthUserContext.Provider>
