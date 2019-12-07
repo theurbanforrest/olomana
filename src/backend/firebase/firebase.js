@@ -66,7 +66,7 @@
 
   		// *** Firestore Database API ***
 
-  			fsThread = uid => this.firestore.collection(`threads`).where('userUid','==',`${uid}`);	
+  			fsThreadByUser = uid => this.firestore.collection(`threads`).where('userUid','==',`${uid}`);	
   			fsThreads = () => this.firestore.collection(`threads`);
 
 	}

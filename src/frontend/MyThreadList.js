@@ -13,7 +13,7 @@ class MyThreadList extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     this.props.firebase
-      .fsThread(this.props.userUid)
+      .fsThreadByUser(this.props.userUid)
       .get()
       .then(
         snapshot => {
