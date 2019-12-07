@@ -49,9 +49,14 @@
 		  doPasswordUpdate = password =>
 		    this.auth.currentUser.updatePassword(password);
 
-		// *** User API ***
-	  		user = uid => this.db.ref(`users/${uid}`);
-	  		users = () => this.db.ref('users');
+		// *** Real-Time Database API ***
+
+			// *** Users ***
+	  			user = uid => this.db.ref(`users/${uid}`);
+	  			users = () => this.db.ref('users');
+
+	  		// *** Threads ***
+	  			threads = () => this.db.ref('threads');
 
 	}
 
