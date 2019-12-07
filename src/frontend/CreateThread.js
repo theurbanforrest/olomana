@@ -77,8 +77,8 @@ class CreateThreadFormBase extends Component {
           //reset form back to empty
           this.setState({ ...INITIAL_STATE });
 
-          //and re-route to /home
-          this.props.history.push(ROUTES.HOME);
+          //and re-route to /dashboard
+          this.props.history.push(ROUTES.DASHBOARD);
 
         })
         event.preventDefault();
