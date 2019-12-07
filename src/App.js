@@ -19,6 +19,7 @@ import PasswordForget from './frontend/PasswordForget';
 import Account from './frontend/Account';
 import Home from './frontend/Home';
 import Admin from './frontend/Admin';
+import CreateThread from './frontend/CreateThread';
 
 
 /// Navigation
@@ -68,6 +69,8 @@ class App extends Component {
             <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
             <Route path={ROUTES.ACCOUNT} component={Account} />
             <Route path={ROUTES.ADMIN} component={Admin} />
+
+            <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
           </div>
         </Router>
       </AuthUserContext.Provider>
