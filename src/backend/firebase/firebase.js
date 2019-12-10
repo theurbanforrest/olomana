@@ -93,11 +93,13 @@
 	  			fsThreadsByUser = uid => this.firestore
 	  				.collection(`threads`)
 	  				.where('userUid','==',`${uid}`)
-	  				.where('status','==',1);
 
 	  			fsThreads = () => this.firestore
 	  				.collection(`threads`)
-	  				.where('status','==',1);
+
+	  			fsThreadsByStatus = (arrOfStatusCodes) => this.firestore
+	  				.collection(`threads`)
+	  				.where('status','in',arrOfStatusCodes)
 
 	}
 

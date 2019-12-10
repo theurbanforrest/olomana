@@ -273,6 +273,7 @@ class ThreadEditorBase extends Component {
             }}>
               Delete
             </button>
+            {loading && <div>Loading ...</div>}
         </div>
       );
     }

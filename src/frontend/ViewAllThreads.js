@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import {} from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import * as STATUSES from '../constants/statuses';
 
 
 class ViewAllThreadsPage extends Component {
@@ -18,7 +19,9 @@ class ViewAllThreadsPage extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     this.props.firebase
-      .fsThreads()
+      .fsThreadsByStatus([
+        STATUSES.VISIBLE
+      ])
       .get()
       .then(
         querySnapshot => {

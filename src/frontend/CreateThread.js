@@ -135,7 +135,7 @@ class CreateThreadFormBase extends Component {
           placeholder="e.g. Text Forrest at 808-422-2222"
         />
         <button disabled={isInvalid} type="submit">
-          Sign Up
+          Submit
         </button>
           {error && <p>{error.message}</p>}
       </form>

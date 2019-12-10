@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withFirebase } from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import * as ROUTES from '../constants/routes';
+import * as ROLES from '../constants/roles';
 
 
 const ThreadPage = () => (
@@ -89,6 +91,16 @@ class ThreadBase extends Component {
               <br/><br/>
               <p>{thread.body}</p>
               <h6><strong>Contact: </strong>{thread.contact}</h6>
+              {
+                !!authUser && ROLES.ADMIN.includes(authUser.uid) && (
+                <button onClick={() => 
+                  {
+                    this.onHideThread()
+                  }}>
+                    Hide As Admin
+                  </button>
+              )}
+
               {loading && <div>Loading ...</div>}
               {error && <p>{error.message}</p>}
             </div>
@@ -96,6 +108,47 @@ class ThreadBase extends Component {
         </AuthUserContext.Consumer>
 
     );
+  }
+
+  onHideThread() {
+    /*** TO DO ***/
+
+    /// / 1. Prompt "Are You Sure?"
+    // Future: This should be a UI component, not the crappy browser fallback
+    //
+    let resp = window.confirm('As an Admin, you are about to hide this.  Continue?');
+
+    /// x. If true, then update status to -1
+    ///
+    // To the User this is "deleted" because it never renders in the UI
+    // Data-wise, will keep in case we need to "restore"
+    // Future: write a job that periodically (every 7 days?) permanently deletes all -1 threads
+    //
+    if(resp){
+
+      const {pathname} = this.props.location;
+      const uid = pathname.substr(8,20); //'9zcUmoQ4jh63aZo1y112';
+      this.props.firebase
+      .fsThread(uid)
+      .update({
+
+        status: 83    /// status -1 indicates it is marked for deletion
+                      /// and will not be rendered in lists
+      })
+      .then(resp => {
+
+        /// Re-route to /admin, to see where it is hidden
+        this.props.history.push(ROUTES.ADMIN);
+
+      })
+      .catch(err =>
+        this.setState({error: err})
+      )
+    }
+    //y. On cancel, do nothing
+    else {
+      /// do nothing
+    }
   }
 }
 
