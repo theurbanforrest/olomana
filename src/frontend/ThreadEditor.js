@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
+import * as STATUSES from '../constants/statuses';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 
 
@@ -76,16 +77,18 @@ class ThreadEditorBase extends Component {
       let utc = new Date().getTime();
 
       let userUid = this.props.userUid;
-      let status = 1;
 
       this.props.firebase
         .fsThread(uid)
         .update({
 
+          /// Update everything EXCEPT status
+          // This allows users to edit posts flagged by Admins without them getting published
+          // Until an Admin actually unflags it
+
           //indexables
           utc,
           userUid,
-          status,
 
           //all others
           headline,
@@ -132,7 +135,7 @@ class ThreadEditorBase extends Component {
       .fsThread(uid)
       .update({
 
-        status: -1    /// status -1 indicates it is marked for deletion
+        status: STATUSES.DELETED    /// status -1 indicates it is marked for deletion
                       /// and will not be rendered in lists
       })
       .then(resp => {

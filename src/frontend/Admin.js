@@ -62,11 +62,13 @@ class AdminPage extends Component {
             {loading && <div>Loading ...</div>}
 
             <UserList users={users} />
+
             <ThreadsList
+              title={'Hidden By Admin'}
+              authUser={authUser}
               statuses={[STATUSES.HIDDEN_BY_ADMIN]}
               ctaView
               ctaUnhide
-              authUser={authUser}
             />
 
           </div>

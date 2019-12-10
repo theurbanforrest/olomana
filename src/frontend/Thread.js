@@ -80,6 +80,7 @@ class ThreadBase extends Component {
   render() {
     const { thread, error, loading } = this.state;
 
+
     return (
 
         <AuthUserContext.Consumer>

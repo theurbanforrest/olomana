@@ -40,7 +40,7 @@ class ThreadsList extends Component {
 
     return (
       <div>
-        <h5> ThreadsList module </h5>
+        <h5>{this.props.title}</h5>
         <ul>
           {loading && <div>Loading ...</div>}
           {threads.map(thread => (

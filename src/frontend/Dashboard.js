@@ -32,18 +32,29 @@ class DashboardPage extends Component {
               <h1>Dashboard</h1>
               <h3>Hello, {authUser.email}</h3>
 
-              <h5>My Threads</h5>
               {loading && <div>Loading ...</div>}
 
               <ThreadsList
+                title='My Threads'
                 authUser={authUser}
                 users={[authUser.uid]}
                 statuses={[
-                  STATUSES.VISIBLE,
+                  STATUSES.VISIBLE
+                ]}
+                ctaView
+                ctaEdit
+              />
+
+              <ThreadsList
+                title='Hidden By Admin'
+                authUser={authUser}
+                users={[authUser.uid]}
+                statuses={[
                   STATUSES.HIDDEN_BY_ADMIN
                 ]}
                 ctaView
                 ctaEdit
+                ctaUnhide
               />
 
             </div>
