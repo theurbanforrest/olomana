@@ -223,7 +223,7 @@ class ThreadEditorBase extends Component {
       headline === '' ||
       price === 0;
 
-    if(!isOwner){
+    if(isOwner===false){
       return(
         <h3> You are not the owner so cannot edit this. </h3>
       );

@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom';
 
 import { AuthUserContext } from '../backend/session';
 import * as ROUTES from '../constants/routes';
+import * as ROLES from '../constants/roles';
 import SignOutButton from './SignOutButton';
 
 const Navigation = () => (
   <div>
     <AuthUserContext.Consumer>
       {authUser =>
-        authUser ? <NavigationAuth /> : <NavigationNonAuth />
+        authUser ? <NavigationAuth authUser={authUser} /> : <NavigationNonAuth />
       }
     </AuthUserContext.Consumer>
   </div>
 );
 
-const NavigationAuth = () => (
+const NavigationAuth = ({ authUser }) => (
   <div class="navigation">
   <ul>
     <li>
@@ -33,9 +34,11 @@ const NavigationAuth = () => (
     <li>
       <Link to={ROUTES.ACCOUNT}>Account</Link>
     </li>
-    <li>
-      <Link to={ROUTES.ADMIN}>Admin</Link>
-    </li>
+    {!!authUser && ROLES.ADMIN.includes(authUser.uid) && (
+        <li>
+          <Link to={ROUTES.ADMIN}>Admin</Link>
+        </li>
+      )}
     <li>
       <Link to={ROUTES.CREATE_THREAD}>Create Thread</Link>
     </li>

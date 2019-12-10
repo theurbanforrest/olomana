@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import {} from '../backend/firebase';
+import { compose } from 'recompose';
+import { withFirebase } from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import * as ROLES from '../constants/roles';
+
 
 class AdminPage extends Component {
   constructor(props) {
@@ -43,13 +46,15 @@ class AdminPage extends Component {
   render() {
     const { users, loading } = this.state;
 
-
     return (
 
       <AuthUserContext.Consumer>
         {authUser => (
           <div>
             <h1>Admin</h1>
+            <p>
+              The Admin Page is accessible by every signed in admin user.
+            </p>
             {loading && <div>Loading ...</div>}
             <UserList users={users} />
           </div>
@@ -77,7 +82,17 @@ const UserList = ({ users }) => (
   </ul>
 );
 
-/// Only show if authUser is designated as Global Admin (status 82)
+/// Only show if authUser is designated as Global Admin
 //
-const condition = authUser => !!authUser;
-export default withAuthorization(condition)(AdminPage);
+/// Checks if the /users uid exists in the Admin list.  For some reason,
+/// if we check status (i.e. status === 82), the component renders but
+/// there is nothing in the UI.  We know this works because negative tests
+/// correctly redirect to /login
+
+const condition = authUser =>
+  !!authUser && ROLES.ADMIN.includes(authUser.uid);
+
+export default compose(
+    withAuthorization(condition),
+    withFirebase,
+)(AdminPage);
