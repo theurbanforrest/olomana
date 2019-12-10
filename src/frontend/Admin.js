@@ -11,8 +11,15 @@ class AdminPage extends Component {
     };
   }
   componentDidMount() {
+
+    /// x. Check that auth'd user is an Admin (status 82)
+
+    /// 1. Open connection to real-time database, get all docs from /users
+    ///
     this.setState({ loading: true });
-    this.props.firebase.users().on('value', snapshot => {
+    this.props.firebase
+      .users()
+      .on('value', snapshot => {
 
       const usersObject = snapshot.val();
       const usersList = Object.keys(usersObject).map(key => ({
@@ -27,6 +34,9 @@ class AdminPage extends Component {
     });
   }
   componentWillUnmount() {
+
+    /// x. Close the connection on unmount
+    ///
     this.props.firebase.users().off();
   }
 
@@ -67,6 +77,7 @@ const UserList = ({ users }) => (
   </ul>
 );
 
+/// Only show if authUser is designated as Global Admin (status 82)
+//
 const condition = authUser => !!authUser;
-
 export default withAuthorization(condition)(AdminPage);

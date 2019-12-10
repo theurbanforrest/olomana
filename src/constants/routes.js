@@ -20,6 +20,7 @@ export const HOME = '/home';
 export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const THREAD = '/thread/:uid';
+export const THREADEDITOR = '/thread/:uid/edit';
 
 /// Protected + firestore
 export const DASHBOARD = '/dashboard';

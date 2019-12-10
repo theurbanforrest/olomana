@@ -25,14 +25,19 @@ class ThreadBase extends Component {
   }
   componentDidMount() {
 
+    /// 1. Get the thread's data from Firestore
+    ///
+    ///
+
     this.setState({ loading: true });
 
     const {pathname} = this.props.location;
 
     //Get the last 20 chars from path
     //All Google Firestore uid's are 20 chars in length
-    
-    const uid = pathname.substr(-20); //'9zcUmoQ4jh63aZo1y112';
+    //Future: May need to adjust if changing vendors
+    //
+    const uid = pathname.substr(8,20); //'9zcUmoQ4jh63aZo1y112';
 
     this.props.firebase
       .fsThread(uid)
@@ -59,6 +64,11 @@ class ThreadBase extends Component {
         }
       )
 
+    /// 2. Check if this thread belongs to the authenticated user
+    ///
+    ///
+
+    /** toDo() **/
   }
   componentWillUnmount() {
 
@@ -74,7 +84,6 @@ class ThreadBase extends Component {
           {authUser => (
             <div>
               <h5>This is a Thread.  It is currently protected to authenticated users only.</h5>
-
               <h3>{thread.headline}</h3>
               <p><strong>Price: </strong>{thread.price}</p>
               <br/><br/>

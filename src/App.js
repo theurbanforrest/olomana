@@ -23,6 +23,7 @@ import CreateThread from './frontend/CreateThread';
 import ViewAllThreads from './frontend/ViewAllThreads';
 import Dashboard from './frontend/Dashboard';
 import Thread from './frontend/Thread';
+import ThreadEditor from './frontend/ThreadEditor';
 
 
 /// Navigation
@@ -61,6 +62,14 @@ class App extends Component {
       /// AuthUserContext provided to all routes in the router
       ///
       <AuthUserContext.Provider value={this.state.authUser}>
+
+        {
+          /// 'Route path' does a basic match
+          /// 'Route exact path' enforces strict match.  This prevents double-rendering
+          /// i.e. /thread/x vs. /thread/x/edit
+          ///
+        }
+        
         <Router>
           <div>
             <Navigation />
@@ -76,7 +85,8 @@ class App extends Component {
             <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
             <Route path={ROUTES.VIEW_ALL_THREADS} component={ViewAllThreads} />
             <Route path={ROUTES.DASHBOARD} component={Dashboard} />
-            <Route path={ROUTES.THREAD} component={Thread} />
+            <Route exact path={ROUTES.THREAD} component={Thread} />
+            <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
           </div>
         </Router>
       </AuthUserContext.Provider>
