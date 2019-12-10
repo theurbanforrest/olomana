@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
-import MyThreadList from './MyThreadList';
+import ThreadsList from './ThreadsList';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import * as STATUSES from '../constants/statuses';
 
 class DashboardPage extends Component {
   constructor(props) {
@@ -13,32 +14,7 @@ class DashboardPage extends Component {
     };
   }
   componentDidMount() {
-
-    this.setState({ loading: true });
-    this.props.firebase
-      .fsThreads()
-      .get()
-      .then(
-        snapshot => {
-
-          return snapshot.docs.map(doc => doc.data())
-          
-        }
-      )
-      .then( s => {
-
-        this.setState({
-            threads: s,
-            loading: false
-
-          })
-
-      })
-      .catch(
-        err => {
-          this.setState({error: err})
-        }
-      )
+    /// Everything handled in <ThreadsList />
   }
   componentWillUnmount() {
 
@@ -58,10 +34,18 @@ class DashboardPage extends Component {
 
               <h5>My Threads</h5>
               {loading && <div>Loading ...</div>}
-              
-              <MyThreadList
-                userUid={authUser.uid}
+
+              <ThreadsList
+                authUser={authUser}
+                users={[authUser.uid]}
+                statuses={[
+                  STATUSES.VISIBLE,
+                  STATUSES.HIDDEN_BY_ADMIN
+                ]}
+                ctaView
+                ctaEdit
               />
+
             </div>
           )}
         </AuthUserContext.Consumer>

@@ -101,6 +101,11 @@
 	  				.collection(`threads`)
 	  				.where('status','in',arrOfStatusCodes)
 
+	  			fsThreadsByUserAndStatus = (uid,statusArr) => this.firestore
+	  				.collection(`threads`)
+	  				.where('userUid','==',`${uid}`)
+	  				.where('status','in',statusArr)
+
 	}
 
 export default Firebase;
