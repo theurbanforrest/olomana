@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Loader from 'react-loader-spinner';
 import { withFirebase } from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import * as ROUTES from '../constants/routes';
@@ -82,32 +83,42 @@ class ThreadBase extends Component {
 
 
     return (
-
         <AuthUserContext.Consumer>
           {authUser => (
             <div>
-              <h5>This is a Thread.  It is currently protected to authenticated users only.</h5>
-              <h3>{thread.headline}</h3>
-              <p><strong>Price: </strong>{thread.price}</p>
-              <br/><br/>
-              <p>{thread.body}</p>
-              <h6><strong>Contact: </strong>{thread.contact}</h6>
-              {
-                !!authUser && ROLES.ADMIN.includes(authUser.uid) && (
-                <button onClick={() => 
-                  {
-                    this.onHideThread()
-                  }}>
-                    Hide As Admin
-                  </button>
-              )}
+              {loading &&
 
-              {loading && <div>Loading ...</div>}
-              {error && <p>{error.message}</p>}
+                <Loader
+                 type="Ball Triangle"
+                 color="#d8d8d8"
+                 height={30}
+                 width={130}
+                 timeout={3000} //3 secs
+                />
+              }
+              {!loading &&
+
+                <div>
+                  <h3>{thread.headline}</h3>
+                  <p><strong>Price: </strong>{thread.price}</p>
+                  <br/><br/>
+                  <p>{thread.body}</p>
+                  <h6><strong>Contact: </strong>{thread.contact}</h6>
+                  {
+                    !!authUser && ROLES.ADMIN.includes(authUser.uid) && (
+                    <button onClick={() => 
+                      {
+                        this.onHideThread()
+                      }}>
+                        Hide As Admin
+                      </button>
+                  )}
+                  {error && <p>{error.message}</p>}
+                </div>
+              }
             </div>
           )}
         </AuthUserContext.Consumer>
-
     );
   }
 

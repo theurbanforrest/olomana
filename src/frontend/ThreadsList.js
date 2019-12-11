@@ -12,6 +12,7 @@ import React, { Component } from 'react';
 import { withFirebase } from '../backend/firebase';
 import {} from '../backend/session';
 import { Link } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
 import * as ROLES from '../constants/roles';
 import * as STATUSES from '../constants/statuses';
 
@@ -42,7 +43,18 @@ class ThreadsList extends Component {
       <div>
         <h5>{this.props.title}</h5>
         <ul>
-          {loading && <div>Loading ...</div>}
+          {loading &&
+
+            <Loader
+               type="Ball Triangle"
+               color="#d8d8d8"
+               height={30}
+               width={130}
+               timeout={3000} //3 secs
+
+            />
+
+          }
           {threads.map(thread => (
             <li key={thread.path}>
               <span>
@@ -79,7 +91,7 @@ class ThreadsList extends Component {
                 }
             </li>
           ))}
-          {threads.length < 1 && 
+          {!loading && threads.length < 1 && 
             <p> You have no threads. </p>
           }
           {error && <p>{error.message}</p>}
