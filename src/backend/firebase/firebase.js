@@ -6,6 +6,8 @@
 		import 'firebase/database';
 		import 'firebase/firestore';
 
+	import * as DATACONFIG from '../../constants/dataConfig';
+
 	const firebaseConfig = {
 	  apiKey: process.env.REACT_APP_API_KEY,
 	  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -90,18 +92,83 @@
 	  				.collection(`threads`)
 	  				.doc(`${uid}`);
 
-	  			fsThreadsByUser = uid => this.firestore
+	  			fsThreadsByUser = (uid) => this.firestore
 	  				.collection(`threads`)
 	  				.where('userUid','==',`${uid}`)
 
 	  			fsThreads = () => this.firestore
 	  				.collection(`threads`)
 
-	  			fsThreadsByStatus = (arrOfStatusCodes) => this.firestore
+	  			fsThreadsByStatus = (statusArr) => this.firestore
 	  				.collection(`threads`)
-	  				.where('status','in',arrOfStatusCodes)
+	  				.where('status','in',statusArr)
 
-	  			fsThreadsByUserAndStatus = (uid,statusArr) => this.firestore
+	  			/// issue #19 WIP 
+	  			///
+	  			///
+
+	  			fsThreadsByStatusPaginated = (statusArr,pageNum) => {
+
+	  				let pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
+
+	  				return this.fsThreadsByStatus(statusArr)
+	  					.get()
+	  					.then(
+	  						querySnapshot => {
+					          // Firestore is unable to get us the path as part of .data()
+					          // So we need to get it ourselves
+					          //
+
+					          //e.g. given pageNum == 8, pageSize == 10
+
+					          const querySize = querySnapshot.size;
+					          const startIndex = (pageNum * pageSize) - pageSize;
+					          let endIndex = startIndex + pageSize;
+
+					          /// If this segment is incomplete, then update to max
+					          //
+					          //
+
+					          if(endIndex + 1 > querySize){
+
+					          	endIndex = querySize;
+
+					          }
+
+					          //startIndex is 79, endIndex is 89
+					          //e.g. reading the 80th thru 90th docs
+
+					          let DocsArray = [];
+
+					          for(let i=startIndex;i<endIndex;i++){
+
+					            let x = {};
+					            x.path = querySnapshot.docs[i].id;
+					            x.data = querySnapshot.docs[i].data();
+
+					            DocsArray.push(x);
+					          }
+
+					          // Then add the query cursor for the next set of data to get
+					          //
+					          //
+
+					          const response = {
+					          	data: DocsArray,
+					          	fullQuerySize: querySize,
+					          	pageNum: pageNum
+					          }
+
+					          return(response)
+					        }
+	  					)
+	  					.catch(err => {alert('firebase error: ' + err.message)})
+	  					
+	  			}
+
+	  			//// End issue #19 WIP
+
+	  			fsThreadsByUserAndStatus = (uid,statusArr,pageNum) => this.firestore
 	  				.collection(`threads`)
 	  				.where('userUid','==',`${uid}`)
 	  				.where('status','in',statusArr)

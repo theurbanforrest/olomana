@@ -1,4 +1,4 @@
-/*** THREADSLIST
+/*** ThreadsListPaginated
 
 A single component that can be used for multiple different scenarios of
 listing Threads
@@ -6,17 +6,16 @@ listing Threads
 https://github.com/theurbanforrest/olomana/issues/23
 
 ***/
-
-
 import React, { Component } from 'react';
 import { withFirebase } from '../backend/firebase';
 import {} from '../backend/session';
 import { Link } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
+import PageSelector from './PageSelector';
 import * as ROLES from '../constants/roles';
 import * as STATUSES from '../constants/statuses';
 
-class ThreadsList extends Component {
+class ThreadsListPaginated extends Component {
   constructor(props) {
     super(props);
 
@@ -32,12 +31,29 @@ class ThreadsList extends Component {
     this.getData();
     
   }
+
   componentWillUnmount() {
     ///
   }
 
   render() {
-    const { threads, loading, error } = this.state;
+
+    /// Declare data manipulated in this.state
+    //
+    //
+    const { 
+      threads, 
+      loading,
+      error,
+      fullQuerySize
+
+    } = this.state;
+
+    /// Declare data manipulated by higher order component, passed via this.props
+    //
+    //
+    let activePage = this.props.activePage;
+    let pageSize = this.props.pageSize;
 
     return (
       <div>
@@ -48,13 +64,13 @@ class ThreadsList extends Component {
             <Loader
                type="BallTriangle"
                color="#d8d8d8"
-               height={30}
+               height={60}
                width={130}
                timeout={3000} //3 secs
             />
 
           }
-          {threads.map(thread => (
+          {!loading && threads.map(thread => (
             <li key={thread.path}>
               <span>
                 <strong>ID:</strong> {thread.path}
@@ -90,11 +106,21 @@ class ThreadsList extends Component {
                 }
             </li>
           ))}
+          {!loading && 
+
+            <PageSelector
+              activePage={activePage}
+              pageSize={pageSize}
+              fullQuerySize={fullQuerySize}
+            />
+
+          }
           {!loading && threads.length < 1 && 
             <p> You have no threads. </p>
           }
           {error && <p>{error.message}</p>}
         </ul>
+
       </div>
     );
   }
@@ -140,59 +166,43 @@ class ThreadsList extends Component {
 
     const users = this.props.users;
     const statuses = this.props.statuses;
+    const activePage = this.props.activePage;
 
-    /// Build the query based on the props
+    /// Build the function based on the props
     ///
 
-    let myQueryRef = this.props.firebase;
 
+    this.setState({ loading: true });
+    let myQuery = this.props.firebase;
     // USERS
     //
 
     if(users){
       if(users.length === 1){
         if(statuses) {
-          myQueryRef = myQueryRef.fsThreadsByUserAndStatus(users[0],statuses);
+          myQuery = myQuery.fsThreadsByUserAndStatus; //(users[0],statuses);
         }
-        else myQueryRef = myQueryRef.fsThreadsByUser(users[0]);
+        else myQuery = myQuery.fsThreadsByUser; //(users[0]);
       }
       else if(users.length > 1){
         // TO-DO in the future
       }
     }
-    else myQueryRef = myQueryRef.fsThreadsByStatus(statuses);
+    else myQuery = this.props.firebase.fsThreadsByStatusPaginated;
 
     /// Run the query and organize the data
 
-    this.setState({ loading: true });
-    myQueryRef.get()
+    myQuery(statuses,activePage)
     .then(
-      querySnapshot => {
+      resp => {
 
-        // Firestore is unable to get us the path as part of .data()
-        // So we need to get it ourselves
-        //
-
-        let DocsArray = [];
-        for(let i=0;i<querySnapshot.docs.length;i++){
-
-          let x = {};
-          x.path = querySnapshot.docs[i].id;
-          x.data = querySnapshot.docs[i].data();
-
-          DocsArray.push(x);
-        }
-        return DocsArray;
-      }
-    )
-    .then(
-      arr => {
-
-      // Now make threads.path and threads.data avail in state
+      // Now make threads.path, threads.data, available in state
       //
 
       this.setState({
-        threads: arr,
+        threads: resp.data,
+        pageNum: resp.pageNum,
+        fullQuerySize: resp.fullQuerySize,
         loading: false
 
       })
@@ -204,12 +214,16 @@ class ThreadsList extends Component {
         // Any errors will show a UI message for now
         //
 
-        this.setState({error: err})
+        this.setState({
+          error: err,
+          loading: false
+        })
       }
     )
 
   }
 }
 
-// This component does not manage if it's public vs. protected so okay to leave basic
-export default withFirebase(ThreadsList);
+// This component does not manage visibility
+//
+export default withFirebase(ThreadsListPaginated);

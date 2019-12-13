@@ -26,7 +26,7 @@ const NavigationAuth = ({ authUser }) => (
       <Link to={ROUTES.DASHBOARD}>Dashboard</Link>
     </li>
     <li>
-      <Link to={ROUTES.VIEW_ALL_THREADS}>View All</Link>
+      <a href='/threads?page=1'>View All</a>
     </li>
     <li>
       <Link to={ROUTES.HOME}>Home</Link>

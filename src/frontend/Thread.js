@@ -89,9 +89,9 @@ class ThreadBase extends Component {
               {loading &&
 
                 <Loader
-                 type="Ball Triangle"
+                 type="BallTriangle"
                  color="#d8d8d8"
-                 height={30}
+                 height={60}
                  width={130}
                  timeout={3000} //3 secs
                 />

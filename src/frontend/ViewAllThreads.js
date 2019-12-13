@@ -1,28 +1,45 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
+import queryString from 'query-string';
 import { withAuthorization, AuthUserContext } from '../backend/session';
-import ThreadsList from './ThreadsList';
+import ThreadsListPaginated from './ThreadsListPaginated';
 import * as STATUSES from '../constants/statuses';
+import * as DATACONFIG from '../constants/dataConfig';
 
 
 class ViewAllThreadsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       error: null
     };
+
   }
 
   componentDidMount() {
     /// Everything handled in <ThreadsList />
+
+    const qs = queryString.parse(this.props.location.search);
+    let activePage = qs ? qs.page : 1;
+
+    this.setState({
+      activePage: activePage,
+      loading: false
+    })
+    
   }
   componentWillUnmount() {
     ///
   }
 
+  componentDidUpdate() {
+    ///
+    
+  }
+
   render() {
-    const { error, loading } = this.state;
+    const { error, loading, activePage } = this.state;
 
     return (
 
@@ -33,12 +50,22 @@ class ViewAllThreadsPage extends Component {
             {loading && <div>Loading ...</div>}
             {error && error.message}
 
-            <ThreadsList
-              statuses={[STATUSES.VISIBLE]}
-              authUser={authUser}
-              ctaView
-              ctaEdit
-            />
+
+            {!loading && 
+
+              /// Rendered with !loading to prevent error from trying to load from undefined
+              //
+              //
+              <ThreadsListPaginated
+                statuses={[STATUSES.VISIBLE]}
+                authUser={authUser}
+                activePage={activePage}
+                pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
+                ctaView
+                ctaEdit
+              />
+            }
+
           </div>
         )}
       </AuthUserContext.Consumer>
