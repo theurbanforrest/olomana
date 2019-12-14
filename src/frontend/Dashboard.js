@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
-import ThreadsList from './ThreadsList';
+import ThreadsListPaginated from './ThreadsListPaginated';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import * as STATUSES from '../constants/statuses';
+import * as DATACONFIG from '../constants/dataConfig';
 
 class DashboardPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
-      ///
+      /// Always initialize as true to prevent pre-mature rendering!
+      //
+      //
+      loading: true,
+      activePage: DATACONFIG.DASHBOARD_ACTIVE_PAGE
 
     };
   }
   componentDidMount() {
     /// Everything handled in <ThreadsList />
+
+    this.setState({
+      loading: false
+    })
+
   }
   componentWillUnmount() {
 
@@ -34,24 +43,32 @@ class DashboardPage extends Component {
 
               {loading && <div>Loading ...</div>}
 
-              <ThreadsList
+              <ThreadsListPaginated
                 title='My Threads'
                 authUser={authUser}
-                users={[authUser.uid]}
+                users={[
+                  authUser.uid
+                ]}
                 statuses={[
                   STATUSES.VISIBLE
                 ]}
+                activePage={1}
+                pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
                 ctaView
                 ctaEdit
               />
 
-              <ThreadsList
+              <ThreadsListPaginated
                 title='Hidden By Admin'
                 authUser={authUser}
-                users={[authUser.uid]}
+                users={[
+                  authUser.uid
+                ]}
                 statuses={[
                   STATUSES.HIDDEN_BY_ADMIN
                 ]}
+                activePage={1}
+                pageSize={DATACONFIG.HIDDENBYADMIN_PAGE_SIZE}
                 ctaView
                 ctaEdit
                 ctaUnhide

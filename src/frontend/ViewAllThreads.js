@@ -61,6 +61,7 @@ class ViewAllThreadsPage extends Component {
                 authUser={authUser}
                 activePage={activePage}
                 pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
+                pageSelectorVisible
                 ctaView
                 ctaEdit
               />

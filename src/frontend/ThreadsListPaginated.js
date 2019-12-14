@@ -54,6 +54,7 @@ class ThreadsListPaginated extends Component {
     //
     let activePage = this.props.activePage;
     let pageSize = this.props.pageSize;
+    let pageSelectorVisible = this.props.pageSelectorVisible;
 
     return (
       <div>
@@ -73,16 +74,10 @@ class ThreadsListPaginated extends Component {
           {!loading && threads.map(thread => (
             <li key={thread.path}>
               <span>
-                <strong>ID:</strong> {thread.path}
-              </span>
-              <span>
                 <strong>Headline:</strong> {thread.data.headline}
               </span>
               <span>
                 <strong>Price:</strong> {thread.data.price}
-              </span>
-              <span>
-                <strong>Status:</strong> {thread.data.status}
               </span>
                 {this.props.ctaView && 
                   <span>
@@ -106,7 +101,7 @@ class ThreadsListPaginated extends Component {
                 }
             </li>
           ))}
-          {!loading && 
+          {!loading && pageSelectorVisible &&
 
             <PageSelector
               activePage={activePage}
@@ -169,30 +164,17 @@ class ThreadsListPaginated extends Component {
     const activePage = this.props.activePage;
 
     /// Build the function based on the props
-    ///
-
-
-    this.setState({ loading: true });
-    let myQuery = this.props.firebase;
-    // USERS
     //
+    //
+    this.setState({ loading: true });
 
-    if(users){
-      if(users.length === 1){
-        if(statuses) {
-          myQuery = myQuery.fsThreadsByUserAndStatus; //(users[0],statuses);
-        }
-        else myQuery = myQuery.fsThreadsByUser; //(users[0]);
-      }
-      else if(users.length > 1){
-        // TO-DO in the future
-      }
+    let inputs = {
+      users: users,
+      statuses: statuses,
+      activePage: activePage
     }
-    else myQuery = this.props.firebase.fsThreadsByStatusPaginated;
 
-    /// Run the query and organize the data
-
-    myQuery(statuses,activePage)
+    this.props.firebase.fsGetThreadsList(inputs)
     .then(
       resp => {
 

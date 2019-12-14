@@ -103,10 +103,125 @@
 	  				.collection(`threads`)
 	  				.where('status','in',statusArr)
 
-	  			/// issue #19 WIP 
-	  			///
-	  			///
+	  			fsThreadsByUserAndStatus = (uid,statusArr) => this.firestore
+	  				.collection(`threads`)
+	  				.where('userUid','==',`${uid}`)
+	  				.where('status','in',statusArr)
 
+
+	  		// *** ThreadsList ***
+
+	  			fsGetThreadsList = async(inputs) => {
+
+	  				const users = inputs.users;
+	  				const statuses = inputs.statuses;
+	  				const activePage = inputs.activePage;
+
+				    // USERS
+				    //
+
+				    if(users){
+				      if(users.length === 1){
+				        if(statuses) {
+				          return this.fsThreadsByUserAndStatusPaginated(users[0],statuses,activePage); //(users[0],statuses);
+				        }
+				        else return this.fsThreadsByUser(users[0])	//TO-DO still needs to be paginated
+				      }
+				      else if(users.length > 1){
+				        // TO-DO in the future
+				      }
+				    }
+				    else return this.fsThreadsByStatusPaginated(statuses,activePage);
+
+	  			}
+
+	  			fsThreadsByUserAndStatusPaginated = async(uid,statusArr,pageNum) => {
+
+	  				const pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
+
+
+	  				return this.fsThreadsByUserAndStatus(uid,statusArr)
+	  					.get()
+	  					.then(qs => {
+
+	  						return this.fsTransform(qs,pageNum,pageSize)
+	  					})
+	  					.catch(err => {
+	  						alert('firebase error: ' + err.message)
+	  					})
+
+	  			}
+
+	  			fsThreadsByStatusPaginated = async(statusArr,pageNum) => {
+
+	  				const pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
+
+	  				return this.fsThreadsByStatus(statusArr)
+	  					.get()
+	  					.then(qs => {
+
+	  						return this.fsTransform(qs,pageNum,pageSize)
+	  					})
+	  					.catch(err => {
+	  						alert('firebase error: ' + err.message)
+	  					})
+
+	  			}
+
+	  			fsTransform = (querySnapshot,pageNum,pageSize) => {
+
+	  				// Firestore is unable to get us the path as part of .data()
+					// So we need to get it ourselves
+					//
+
+					//e.g. given pageNum == 8, pageSize == 10
+
+					const querySize = querySnapshot.size;
+					const startIndex = (pageNum * pageSize) - pageSize;
+					let endIndex = startIndex + pageSize;
+
+					/// DEBUG --- alert(querySize + '|' +startIndex + '|' +endIndex+ 'inputes: '+pageNum+'|'+pageSize);
+
+					/// If this segment is incomplete, then update to max
+					//
+					//
+
+					if(endIndex + 1 > querySize){
+
+						endIndex = querySize;
+
+					}
+
+					//startIndex is 79, endIndex is 89
+					//e.g. reading the 80th thru 90th docs
+
+					let DocsArray = [];
+
+					for(let i=startIndex;i<endIndex;i++){
+
+					let x = {};
+					x.path = querySnapshot.docs[i].id;
+					x.data = querySnapshot.docs[i].data();
+
+					DocsArray.push(x);
+					}
+
+					// Then add the query cursor for the next set of data to get
+					//
+					//
+
+					const response = {
+						data: DocsArray,
+						fullQuerySize: querySize,
+						pageNum: pageNum
+					}
+
+					return(response)
+
+	  			}
+
+
+	  			/**
 	  			fsThreadsByStatusPaginated = (statusArr,pageNum) => {
 
 	  				let pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
@@ -115,63 +230,60 @@
 	  					.get()
 	  					.then(
 	  						querySnapshot => {
-					          // Firestore is unable to get us the path as part of .data()
-					          // So we need to get it ourselves
-					          //
 
-					          //e.g. given pageNum == 8, pageSize == 10
+	  							// Firestore is unable to get us the path as part of .data()
+								// So we need to get it ourselves
+								//
 
-					          const querySize = querySnapshot.size;
-					          const startIndex = (pageNum * pageSize) - pageSize;
-					          let endIndex = startIndex + pageSize;
+								//e.g. given pageNum == 8, pageSize == 10
 
-					          /// If this segment is incomplete, then update to max
-					          //
-					          //
+								const querySize = querySnapshot.size;
+								const startIndex = (pageNum * pageSize) - pageSize;
+								let endIndex = startIndex + pageSize;
 
-					          if(endIndex + 1 > querySize){
+								/// If this segment is incomplete, then update to max
+								//
+								//
 
-					          	endIndex = querySize;
+								if(endIndex + 1 > querySize){
 
-					          }
+									endIndex = querySize;
 
-					          //startIndex is 79, endIndex is 89
-					          //e.g. reading the 80th thru 90th docs
+								}
 
-					          let DocsArray = [];
+								//startIndex is 79, endIndex is 89
+								//e.g. reading the 80th thru 90th docs
 
-					          for(let i=startIndex;i<endIndex;i++){
+								let DocsArray = [];
 
-					            let x = {};
-					            x.path = querySnapshot.docs[i].id;
-					            x.data = querySnapshot.docs[i].data();
+								for(let i=startIndex;i<endIndex;i++){
 
-					            DocsArray.push(x);
-					          }
+								let x = {};
+								x.path = querySnapshot.docs[i].id;
+								x.data = querySnapshot.docs[i].data();
 
-					          // Then add the query cursor for the next set of data to get
-					          //
-					          //
+								DocsArray.push(x);
+								}
 
-					          const response = {
-					          	data: DocsArray,
-					          	fullQuerySize: querySize,
-					          	pageNum: pageNum
-					          }
+								// Then add the query cursor for the next set of data to get
+								//
+								//
 
-					          return(response)
+								const response = {
+									data: DocsArray,
+									fullQuerySize: querySize,
+									pageNum: pageNum
+								}
+
+								return(response)
+					          
 					        }
 	  					)
 	  					.catch(err => {alert('firebase error: ' + err.message)})
 	  					
 	  			}
-
-	  			//// End issue #19 WIP
-
-	  			fsThreadsByUserAndStatus = (uid,statusArr,pageNum) => this.firestore
-	  				.collection(`threads`)
-	  				.where('userUid','==',`${uid}`)
-	  				.where('status','in',statusArr)
+			**/
+	  			
 
 	}
 
