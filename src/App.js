@@ -24,12 +24,16 @@ import ViewAllThreads from './frontend/ViewAllThreads';
 import Dashboard from './frontend/Dashboard';
 import Thread from './frontend/Thread';
 import ThreadEditor from './frontend/ThreadEditor';
+import {
+  Container
+} from 'react-bootstrap';
 
 
 /// Navigation
 ///
 import Navigation from './frontend/Navigation';
 import * as ROUTES from './constants/routes';
+import * as THEME from './constants/theme';
 
 
 /// Firebase
@@ -69,26 +73,26 @@ class App extends Component {
           /// i.e. /thread/x vs. /thread/x/edit
           ///
         }
-        
-        <Router>
-          <div>
-            <Navigation />
-            <hr />
-            <Route exact path={ROUTES.LANDING} component={Landing} />
-            <Route path={ROUTES.LOGIN} component={Login} />
-            <Route path={ROUTES.HOME} component={Home} />
-            <Route path={ROUTES.SIGN_UP} component={SignUp} />
-            <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
-            <Route path={ROUTES.ACCOUNT} component={Account} />
-            <Route path={ROUTES.ADMIN} component={Admin} />
+          <Container id='routes-wrapper'>
+            <Router>
+              <Navigation />
+              <Container style={THEME.ROUTER}>
+                <Route exact path={ROUTES.LANDING} component={Landing} />
+                <Route path={ROUTES.LOGIN} component={Login} />
+                <Route path={ROUTES.HOME} component={Home} />
+                <Route path={ROUTES.SIGN_UP} component={SignUp} />
+                <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+                <Route path={ROUTES.ACCOUNT} component={Account} />
+                <Route path={ROUTES.ADMIN} component={Admin} />
 
-            <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
-            <Route path={ROUTES.VIEW_ALL_THREADS} component={ViewAllThreads} />
-            <Route path={ROUTES.DASHBOARD} component={Dashboard} />
-            <Route exact path={ROUTES.THREAD} component={Thread} />
-            <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
-          </div>
-        </Router>
+                <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
+                <Route path={ROUTES.VIEW_ALL_THREADS} component={ViewAllThreads} />
+                <Route path={ROUTES.DASHBOARD} component={Dashboard} />
+                <Route exact path={ROUTES.THREAD} component={Thread} />
+                <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
+              </Container>
+            </Router>
+          </Container>
       </AuthUserContext.Provider>
     );
   } 
