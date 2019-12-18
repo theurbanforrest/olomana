@@ -47,3 +47,8 @@ npm start
 
 * Firestore: Great NoSQL db for querying and pagination, both of which we will use heavily.  Also scales better supposedly.
 
+### Active Branches
+
+`master` is the completion of Robin Wieruch's tutorial
+`feature/v1-posts` is working towards completion of a true boilerplate
+
