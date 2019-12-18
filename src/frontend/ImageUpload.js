@@ -95,7 +95,6 @@ class ImageUpload extends Component {
     );
   }
 }
-
 export default withFirebase(ImageUpload);
 
 

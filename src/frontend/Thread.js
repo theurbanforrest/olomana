@@ -53,13 +53,11 @@ class ThreadBase extends Component {
         }
       )
       .then( s => {
-
         this.setState({
             thread: s,
             loading: false
 
           })
-
       })
       .catch(
         err => {
