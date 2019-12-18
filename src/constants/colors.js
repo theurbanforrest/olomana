@@ -5,7 +5,7 @@ let base1_dark = '#999999';
 
 let font1_lite = '#FFFFFF';
 
-let accent1_dark = '#0B224A';
+//let accent1_dark = '#0B224A';
 
 let accent2_lite = '#7C4D4D';
 let accent2_dark = '#761A1A';

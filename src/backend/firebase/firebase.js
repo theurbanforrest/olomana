@@ -5,6 +5,7 @@
 		import 'firebase/auth';
 		import 'firebase/database';
 		import 'firebase/firestore';
+		import 'firebase/storage';
 
 	import * as DATACONFIG from '../../constants/dataConfig';
 
@@ -27,11 +28,13 @@
 	  	// 2. Authentication
 	  	// 3. Database (real-time)
 	  	// 4. Firestore
+	  	// 5. Storage
 	  	//
 	    app.initializeApp(firebaseConfig);
 	    this.auth = app.auth();
 	    this.db = app.database();
 	    this.firestore = app.firestore();
+	    this.storage = app.storage();
 	  }
 
 	  // *** Auth API ***

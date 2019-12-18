@@ -5,6 +5,7 @@ import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 import * as STATUSES from '../constants/statuses';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import ImageUpload from '../frontend/ImageUpload';
 
 
 const ThreadEditorPage = () => (
@@ -26,8 +27,10 @@ const INITIAL_STATE = {
     isOwner: null,
 
   /// Props to get initial data
-    thread: {},
-    loading: false,
+    thread: {
+      uid: null
+    },
+    loading: true,
 
   /// Props for the form (based on CreateThread.js)
     headline: '',
@@ -184,12 +187,12 @@ class ThreadEditorBase extends Component {
       .then(
         thr => {
           this.setState({
+            threadUid: uid,
             thread: thr,
             headline: thr.headline,
             body: thr.body,
             price: thr.price,
-            contact: thr.contact,
-            loading: false
+            contact: thr.contact
           })
           return true
       })
@@ -198,11 +201,15 @@ class ThreadEditorBase extends Component {
         /// 2. Check if this thread belongs to the authenticated user
         ///
         this.setState({
-          isOwner: this.state.thread.userUid === this.props.userUid ? true : false
+          isOwner: this.state.thread.userUid === this.props.userUid ? true : false,
+          loading: false
         })
       })
       .catch(err => {
-          this.setState({error: err})
+          this.setState({
+            error: err.message,
+            loading: false
+          })
       })
   }
   componentWillUnmount() {
@@ -277,6 +284,13 @@ class ThreadEditorBase extends Component {
               Delete
             </button>
             {loading && <div>Loading ...</div>}
+
+            {!loading && 
+              <ImageUpload
+                thread
+                threadUid={this.state.threadUid}
+              />
+            }
         </div>
       );
     }
@@ -289,12 +303,12 @@ const ThreadEditorForm = compose(
 )(ThreadEditorBase);
 
 
-//Must be authenticated in order to view
+///  Must be authenticated in order to view
+//
+//  TO-DO: If user is not the owner, redirect - currently handled via UI
+//
+const condition = authUser =>
+  !!authUser
 
-const condition = authUser => 
-
-  authUser  // user is logged in
-
-;
 export default withAuthorization(condition)(ThreadEditorPage);
 export { ThreadEditorForm };

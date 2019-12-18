@@ -9,7 +9,8 @@ export const APP = {
 
 export const ROUTER = {
 	"paddingTop":"6em",
-  "paddingLeft":"1.5em"
+  "paddingLeft":"1.5em",
+  "paddingRight":"1.5em"
 }
 export const NAVBAR = {
 
