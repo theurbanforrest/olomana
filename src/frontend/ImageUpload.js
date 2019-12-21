@@ -20,14 +20,15 @@ class ImageUpload extends Component {
 
   handleUpload = () => {
     const { image } = this.state;
-    const { thread, threadUid } = this.props;
+    const { thread, threadUid, firebase } = this.props;
 
     /// If thread
     //
     let entity = thread ? "threads" : "unknownEntity";
     let identifier = threadUid ? threadUid : "unknownIdentifier";
 
-    const uploadTask = this.props.firebase.storage.ref(`images/${entity}/${identifier}/${image.name}`).put(image);
+    const uploadTask = firebase.storage.ref(`images/${entity}/${identifier}/${image.name}`).put(image);
+    //const uploadTask = firebase.stFilePut('images',entity,identifier,image.name);
     uploadTask.on(
       "state_changed",
       snapshot => {

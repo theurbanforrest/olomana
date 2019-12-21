@@ -286,8 +286,25 @@
 	  					
 	  			}
 			**/
-	  			
 
+		///
+    	///
+  		// *** Storage API ***
+
+  			// *** Files***
+
+  				stFilePut = (rootPath,entity,identifier,fileName) => this.storage
+  					.ref(`${rootPath}/${entity}/${identifier}/${fileName}`).put(fileName);
+
+  				stFilesList = (rootPath,entity,identifer) => this.storage
+  					.ref('images')
+  					.child('threads')
+  					.child(identifer).listAll();
+
+  				stFileGet = (filePath) => this.storage.ref(filePath).getDownloadUrl()
+  					.then((url)=>{return url})
+  					.catch((err)=>{return err.message})
+	  			
 	}
 
 export default Firebase;

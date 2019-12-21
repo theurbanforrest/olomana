@@ -61,7 +61,6 @@ class ThreadEditorBase extends Component {
 
     } = this.state;
 
-      console.log('ThreadEditor toDo()')
       /// TO-DO
 
       //x. Get UTC timestamp (for ordering purposes)

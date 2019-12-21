@@ -6,6 +6,7 @@ import { withFirebase } from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import * as ROUTES from '../constants/routes';
 import * as ROLES from '../constants/roles';
+import ThreadImages from '../frontend/ThreadImages';
 
 
 const ThreadPage = () => (
@@ -20,7 +21,9 @@ class ThreadBase extends Component {
     super(props);
     this.state = {
       
-      thread: {},
+      thread: {
+        uid: null
+      },
       error: null,
       loading: false
 
@@ -78,6 +81,7 @@ class ThreadBase extends Component {
 
   render() {
     const { thread, error, loading } = this.state;
+    const { firebase } = this.props;
 
 
     return (
@@ -98,6 +102,13 @@ class ThreadBase extends Component {
 
                 <div>
                   <h3>{thread.headline}</h3>
+
+                  <ThreadImages
+                    firebase={firebase}
+                    threadUid={this.state.thread.uid}
+                    storageRootPath={`images/threads`}
+                  />
+
                   <p><strong>Price: </strong>{thread.price}</p>
                   <br/><br/>
                   <p>{thread.body}</p>
