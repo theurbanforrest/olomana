@@ -20,9 +20,8 @@ class ThreadBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+      threadUid: null,
       thread: {
-        uid: null
       },
       error: null,
       loading: false
@@ -57,6 +56,7 @@ class ThreadBase extends Component {
       )
       .then( s => {
         this.setState({
+            threadUid: uid,
             thread: s,
             loading: false
 
@@ -64,7 +64,7 @@ class ThreadBase extends Component {
       })
       .catch(
         err => {
-          this.setState({error: err})
+          this.setState({error: err.message})
         }
       )
 
@@ -80,7 +80,7 @@ class ThreadBase extends Component {
   }
 
   render() {
-    const { thread, error, loading } = this.state;
+    const { threadUid, thread, error, loading } = this.state;
     const { firebase } = this.props;
 
 
@@ -89,7 +89,6 @@ class ThreadBase extends Component {
           {authUser => (
             <div>
               {loading &&
-
                 <Loader
                  type="BallTriangle"
                  color="#d8d8d8"
@@ -99,16 +98,17 @@ class ThreadBase extends Component {
                 />
               }
               {!loading &&
-
-                <div>
                   <h3>{thread.headline}</h3>
-
+              }
+              {!loading && threadUid &&
                   <ThreadImages
                     firebase={firebase}
-                    threadUid={this.state.thread.uid}
+                    threadUid={threadUid}
                     storageRootPath={`images/threads`}
                   />
-
+              }
+              {!loading &&
+                <div>
                   <p><strong>Price: </strong>{thread.price}</p>
                   <br/><br/>
                   <p>{thread.body}</p>

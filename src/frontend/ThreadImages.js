@@ -18,13 +18,61 @@ class ThreadImages extends Component {
     this.state = {
       
       loading: true,
-      images: []
+      imageRefs: [
+        './logo512.png'
+      ],
+      imageUrls: [],
+
+      /** TO-DO: Proven that this works to get image **/
+      helloWorld: null
 
     };
   }
   componentDidMount() {
-    this.setState({loading: true});
-    this.getAllImages(this.props.threadUid)
+
+    const { threadUid, firebase } = this.props;
+
+    /** TO-DO -- Abstract this function away to firebase **/
+
+    /// Get all files for this thread
+    //
+    //
+    firebase.storage.ref().child('/images/threads/' +threadUid).list({ maxResults: 6})
+      .then(resp => {
+        
+        this.setState({
+          imageRefs: resp.items
+        })
+      })
+      .then(() => {
+        /// getDownloadURL() for each of the files
+        //
+        //
+        this.state.imageRefs.forEach((image, index) => {
+          image.getDownloadURL()
+            .then(resp => {
+              this.setState({
+                imageUrls: [...this.state.imageUrls, resp]
+              })
+            })
+        });
+
+        /// Resolve the function
+        //
+        //
+        this.setState({loading: false});
+        return true;
+
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          error: err.message
+        })
+
+        return false;
+      })
+
   }
   componentWillUnmount() {
 
@@ -32,35 +80,27 @@ class ThreadImages extends Component {
   }
 
   render() {
-    const { thread, error, loading } = this.state;
+    const { thread, error, helloWorld, imageRefs, imageUrls, loading } = this.state;
     const { threadUid, storageRootPath, firebase } = this.props;
 
     return(
         <Row>
           <h5>ThreadImages</h5>
           <Col xs={6} md={4}>
-            <Image src={this.state.images[0]} rounded />
+            {!loading &&
+              <div>
+                {imageUrls.map(url => (
+                  <Image src={url} />
+                ))}
+              </div>
+            }
+            {error &&
+              <p>{error}</p>
+            }
           </Col>
+
         </Row>
     )
-  }
-
-  getAllImages(threadUid){
-
-    const { storageRootPath, firebase } = this.props;
-
-    /// TO-DO: Figure out how to get listAll() to work
-    // And then how to display all the images
-    //
-    //
-      firebase.storage
-        .ref('images')
-        .child('threads')
-        .child(threadUid)
-        .listAll()
-      .then((resp) => {
-        alert(resp)
-      })
   }
 }
 

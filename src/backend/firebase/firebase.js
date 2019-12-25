@@ -293,6 +293,8 @@
 
   			// *** Files***
 
+  			/*** TO-DO validate & unit test the below functions to abstract Firebase funcs here ***/
+
   				stFilePut = (rootPath,entity,identifier,fileName) => this.storage
   					.ref(`${rootPath}/${entity}/${identifier}/${fileName}`).put(fileName);
 
