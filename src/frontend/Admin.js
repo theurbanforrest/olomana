@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
-import {} from '../backend/firebase';
+import { compose } from 'recompose';
+import UserList from './UserList';
+import { withFirebase } from '../backend/firebase';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import * as ROLES from '../constants/roles';
+import * as STATUSES from '../constants/statuses';
+import ThreadsList from './ThreadsList';
+
 
 class AdminPage extends Component {
   constructor(props) {
@@ -11,8 +17,15 @@ class AdminPage extends Component {
     };
   }
   componentDidMount() {
+
+    /// x. Check that auth'd user is an Admin (status 82)
+
+    /// 1. Open connection to real-time database, get all docs from /users
+    ///
     this.setState({ loading: true });
-    this.props.firebase.users().on('value', snapshot => {
+    this.props.firebase
+      .users()
+      .on('value', snapshot => {
 
       const usersObject = snapshot.val();
       const usersList = Object.keys(usersObject).map(key => ({
@@ -25,14 +38,17 @@ class AdminPage extends Component {
         loading: false,
       });
     });
+
   }
   componentWillUnmount() {
+
+    /// x. Close the connection on unmount
+    ///
     this.props.firebase.users().off();
   }
 
   render() {
     const { users, loading } = this.state;
-
 
     return (
 
@@ -40,8 +56,21 @@ class AdminPage extends Component {
         {authUser => (
           <div>
             <h1>Admin</h1>
+            <p>
+              The Admin Page is accessible by every signed in admin user.
+            </p>
             {loading && <div>Loading ...</div>}
+
             <UserList users={users} />
+
+            <ThreadsList
+              title={'Hidden By Admin'}
+              authUser={authUser}
+              statuses={[STATUSES.HIDDEN_BY_ADMIN]}
+              ctaView
+              ctaUnhide
+            />
+
           </div>
         )}
       </AuthUserContext.Consumer>
@@ -49,24 +78,17 @@ class AdminPage extends Component {
   }
 }
 
-const UserList = ({ users }) => (
-  <ul>
-    {users.map(user => (
-      <li key={user.uid}>
-        <span>
-          <strong>ID:</strong> {user.uid}
-        </span>
-        <span>
-          <strong>E-Mail:</strong> {user.email}
-        </span>
-        <span>
-          <strong>Username:</strong> {user.username}
-        </span>
-      </li>
-    ))}
-  </ul>
-);
+/// Only show if authUser is designated as Global Admin
+//
+/// Checks if the /users uid exists in the Admin list.  For some reason,
+/// if we check status (i.e. status === 82), the component renders but
+/// there is nothing in the UI.  We know this works because negative tests
+/// correctly redirect to /login
 
-const condition = authUser => !!authUser;
+const condition = authUser =>
+  !!authUser && ROLES.ADMIN.includes(authUser.uid);
 
-export default withAuthorization(condition)(AdminPage);
+export default compose(
+    withAuthorization(condition),
+    withFirebase,
+)(AdminPage);

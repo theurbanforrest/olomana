@@ -1,41 +1,45 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
+import queryString from 'query-string';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import ThreadsListPaginated from './ThreadsListPaginated';
+import * as STATUSES from '../constants/statuses';
+import * as DATACONFIG from '../constants/dataConfig';
+
 
 class ViewAllThreadsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      threads: [],
+      loading: true,
+      error: null
     };
+
   }
+
   componentDidMount() {
-    this.setState({ loading: true });
-    this.props.firebase.threads().on('value', snapshot => {
+    /// Everything handled in <ThreadsList />
 
-      const threadsObject = snapshot.val();
-      const threadsList = Object.keys(threadsObject).map(key => ({
+    const qs = queryString.parse(this.props.location.search);
+    let activePage = qs ? qs.page : 1;
 
-        //map everything from threadsObject into a list
-        ...threadsObject[key],
-
-        //note what the key is.  i.e. for /threads it is id.  e.g. for /users it is uid.
-        uid: key,
-      }));
-
-      this.setState({
-        threads: threadsList,
-        loading: false,
-      });
-    });
+    this.setState({
+      activePage: activePage,
+      loading: false
+    })
+    
   }
   componentWillUnmount() {
-    this.props.firebase.threads().off();
+    ///
+  }
+
+  componentDidUpdate() {
+    ///
+    
   }
 
   render() {
-    const { threads, loading } = this.state;
+    const { error, loading, activePage } = this.state;
 
     return (
 
@@ -44,7 +48,25 @@ class ViewAllThreadsPage extends Component {
           <div>
             <h1>ViewAllThreads</h1>
             {loading && <div>Loading ...</div>}
-            <ThreadList threads={threads} />
+            {error && error.message}
+
+
+            {!loading && 
+
+              /// Rendered with !loading to prevent error from trying to load from undefined
+              //
+              //
+              <ThreadsListPaginated
+                statuses={[STATUSES.VISIBLE]}
+                authUser={authUser}
+                activePage={activePage}
+                pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
+                pageSelectorVisible
+                ctaView
+                ctaEdit
+              />
+            }
+
           </div>
         )}
       </AuthUserContext.Consumer>
@@ -52,27 +74,8 @@ class ViewAllThreadsPage extends Component {
   }
 }
 
-const ThreadList = ({ threads }) => (
-  <ul>
-    {threads.map(thread => (
-      <li key={thread.uid}>
-        <span>
-          <strong>ID:</strong> {thread.uid}
-        </span>
-        <span>
-          <strong>Headline:</strong> {thread.headline}
-        </span>
-        <span>
-          <strong>Price:</strong> {thread.price}
-        </span>
-      </li>
-    ))}
-  </ul>
-);
-
 // This is public currently but let's keep the option of having it protected
 // So set authUser => true
 
 const condition = authUser => true; //!!authUser;
-
 export default withAuthorization(condition)(ViewAllThreadsPage);
