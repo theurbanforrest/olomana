@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Loader from 'react-loader-spinner';
 import { withFirebase } from '../backend/firebase';
-import { AuthUserContext } from '../backend/session';
-import * as ROUTES from '../constants/routes';
-import * as ROLES from '../constants/roles';
 import {
   Row,
   Col,
@@ -21,10 +16,7 @@ class ThreadImages extends Component {
       imageRefs: [
         './logo512.png'
       ],
-      imageUrls: [],
-
-      /** TO-DO: Proven that this works to get image **/
-      helloWorld: null
+      imageUrls: []
 
     };
   }
@@ -80,13 +72,21 @@ class ThreadImages extends Component {
   }
 
   render() {
-    const { thread, error, helloWorld, imageRefs, imageUrls, loading } = this.state;
-    const { threadUid, storageRootPath, firebase } = this.props;
+    const { imageUrls, loading, error } = this.state;
 
     return(
         <Row>
+          {loading &&
+            <Loader
+             type="BallTriangle"
+             color="#d8d8d8"
+             height={60}
+             width={130}
+             timeout={3000} //3 secs
+            />
+          }
           <h5>ThreadImages</h5>
-          <Col xs={6} md={4}>
+          <Col xs={12} md={6}>
             {!loading &&
               <div>
                 {imageUrls.map(url => (
