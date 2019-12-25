@@ -1,76 +1,81 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { withFirebase } from '../backend/firebase';
-import * as ROUTES from '../constants/routes';
-import { compose } from 'recompose';
+import {} from '../backend/firebase';
+import queryString from 'query-string';
+import { withAuthorization, AuthUserContext } from '../backend/session';
+import ThreadsListPaginated from './ThreadsListPaginated';
+import * as STATUSES from '../constants/statuses';
+import * as DATACONFIG from '../constants/dataConfig';
 
 
-
-const ViewAllThreadsPage = () => (  
-  <div>
-    <h1>ViewAllThreads</h1>
-    <ViewAllThreadsForm />
-    <SignUpLink />
-    <PasswordForgetLink />
-  </div>
-);
-const INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null,
-};
-class ViewAllThreadsBase extends Component {
+class ViewAllThreadsPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...INITIAL_STATE };
+    this.state = {
+      loading: true,
+      error: null
+    };
+
   }
-  onSubmit = event => {
-    const { email, password } = this.state;
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-    event.preventDefault();
-  };
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
+
+  componentDidMount() {
+    /// Everything handled in <ThreadsList />
+
+    const qs = queryString.parse(this.props.location.search);
+    let activePage = qs ? qs.page : 1;
+
+    this.setState({
+      activePage: activePage,
+      loading: false
+    })
+    
+  }
+  componentWillUnmount() {
+    ///
+  }
+
+  componentDidUpdate() {
+    ///
+    
+  }
+
   render() {
-    const { email, password, error } = this.state;
-    const isInvalid = password === '' || email === '';
+    const { error, loading, activePage } = this.state;
+
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
-        {error && <p>{error.message}</p>}
-      </form>
+
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <div>
+            <h1>ViewAllThreads</h1>
+            {loading && <div>Loading ...</div>}
+            {error && error.message}
+
+
+            {!loading && 
+
+              /// Rendered with !loading to prevent error from trying to load from undefined
+              //
+              //
+              <ThreadsListPaginated
+                statuses={[STATUSES.VISIBLE]}
+                authUser={authUser}
+                activePage={activePage}
+                pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
+                pageSelectorVisible
+                ctaView
+                ctaEdit
+              />
+            }
+
+          </div>
+        )}
+      </AuthUserContext.Consumer>
     );
   }
 }
-const ViewAllThreads = compose(
-  withRouter,
-  withFirebase,
-)(ViewAllThreadsBase);
 
-export default ViewAllThreadsPage;
-export { ViewAllThreads };
+// This is public currently but let's keep the option of having it protected
+// So set authUser => true
+
+const condition = authUser => true; //!!authUser;
+export default withAuthorization(condition)(ViewAllThreadsPage);

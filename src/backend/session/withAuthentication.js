@@ -1,3 +1,13 @@
+/***
+
+withAuthentication higher-order component
+
+> Merges RTD /users (how they signed in) and Firestore /users (other things we track)
+into local state so it can be used by all components in the app
+
+
+***/
+
 import React from 'react';
 import AuthUserContext from './context';
 import { withFirebase } from '../firebase';
@@ -11,11 +21,15 @@ const withAuthentication = Component => {
       };
     }
     componentDidMount() {
-      this.listener = this.props.firebase.auth.onAuthStateChanged(
+
+      /// When the authenticated user changes, run this function
+      //
+      this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
-          authUser
-            ? this.setState({ authUser })
-            : this.setState({ authUser: null });
+          this.setState({ authUser });
+        },
+        () => {
+          this.setState({ authUser: null });
         },
       );
     }

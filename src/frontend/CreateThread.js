@@ -55,8 +55,8 @@ class CreateThreadFormBase extends Component {
       let status = 1;
 
       this.props.firebase
-        .threads()
-        .push({
+        .fsThreads()
+        .add({
 
           //indexables
           utc,
@@ -77,8 +77,8 @@ class CreateThreadFormBase extends Component {
           //reset form back to empty
           this.setState({ ...INITIAL_STATE });
 
-          //and re-route to /home
-          this.props.history.push(ROUTES.HOME);
+          //and re-route to /dashboard
+          this.props.history.push(ROUTES.DASHBOARD);
 
         })
         event.preventDefault();
@@ -135,7 +135,7 @@ class CreateThreadFormBase extends Component {
           placeholder="e.g. Text Forrest at 808-422-2222"
         />
         <button disabled={isInvalid} type="submit">
-          Sign Up
+          Submit
         </button>
           {error && <p>{error.message}</p>}
       </form>

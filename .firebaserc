@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "dad-onco",
+    "staging": "olomana-staging"
+  }
+}

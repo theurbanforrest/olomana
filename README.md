@@ -1,10 +1,12 @@
 # Olomana
 A digital product starter based on ReactJS and Firebase
-BIG props to Robin Wieruch's starter guide: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth
+
+##### Props First
+BIG ups to Robin Wieruch's starter guide: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth .  Highly recommended for anyone looking to give a full stack web app a go.
 
 ### Getting Started
 
-##### Configure Firebase
+##### 1. Configure Firebase
 
 Create a new `.env.local` file in project's root with your Firebase creds:
 ```bash
@@ -20,9 +22,9 @@ Create a new `.env.local` file in project's root with your Firebase creds:
 
 These come straight from the Firebase console's settings. You need to convert from JSON to these REACT_APP_ prefixed vars.
 
-##### Run Locally
+##### 2. Run Locally
 
-Now you can run the app locally:
+Make sure you have npm installed (and that's all you need).  Run via command line:
 
 ```bash
 npm install
@@ -31,18 +33,22 @@ npm start
 
 * App is now open on https://localhost:3000
 * Sign Up, Log In functions are connected to your Firebase project.  You can see new users getting added in Authentication.
-* Adding a user also logs a record in your Real-Time Database (RTD).
+* Adding a user also logs a record in Realtime Database.
+
 
 * /account and /home are only shown if you are logged in.  Else you get redirected back to /login.
-* /admin shows a list of all users, pulled from the RTD.
+* /threads gets all from the Firestore Collection 'threads'
+* /dashboard gets only the docs from 'threads' that belong to the logged in user.
 
 
-### Mahalo Open Source!
+### Firebase
+* Authentication: the Source Of Record (SOR) for all unique users
+* Realtime Database: $$ by connection, not action.  Therefore, using for common lookups (i.e. /users for user data) and future online/offline features.  Does not scale well but not a near-term issue.
 
-* create-react-app
-* react-router-dom
-* recompose
-* firebase
-* 
+* Firestore: Great NoSQL db for querying and pagination, both of which we will use heavily.  Also scales better supposedly.
 
+### Active Branches
+
+`master` is the completion of Robin Wieruch's tutorial
+`feature/v1-posts` is working towards completion of a true boilerplate
 
