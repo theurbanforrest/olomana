@@ -76,7 +76,7 @@ class ThreadEditorBase extends Component {
       //Future: May need to adjust if changing vendors
       //
       const uid = pathname.substr(8,20); //'9zcUmoQ4jh63aZo1y112';
-      let utc = new Date().getTime();
+      const utcModified = new Date().getTime();
 
       let userUid = this.props.userUid;
 
@@ -89,7 +89,7 @@ class ThreadEditorBase extends Component {
           // Until an Admin actually unflags it
 
           //indexables
-          utc,
+          utcModified,
           userUid,
 
           //all others

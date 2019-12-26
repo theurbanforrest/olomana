@@ -50,7 +50,8 @@ class CreateThreadFormBase extends Component {
       //x. Get user's UID (so we know who this post belongs to)
       //x. Set status as 1 (visible)
 
-      let utc = new Date().getTime();
+      const utcCreated = new Date().getTime();
+      const utcModified = utcCreated;
       let userUid = this.props.userUid;
       let status = 1;
 
@@ -59,7 +60,8 @@ class CreateThreadFormBase extends Component {
         .add({
 
           //indexables
-          utc,
+          utcCreated,
+          utcModified,
           userUid,
           status,
 

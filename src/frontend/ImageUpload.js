@@ -33,12 +33,14 @@ class ImageUpload extends Component {
     /// Get timestamp as a prefix for filename.  Prevents overwriting of files with same name
     /// e.g. Uploading from iPhone is always "image.jpeg" so need to differentiate
     //
-    const utc = new Date().getTime();
-    const filename = `${utc}_${image.name}`;
+    const utcCreated = new Date().getTime();
+    const filename = `${utcCreated}_${image.name}`;
 
     /// TO-DO: Abstract away to firebase -- https://github.com/theurbanforrest/olomana/issues/34
     //
-    const uploadTask = firebase.storage.ref(`images/${entity}/${identifier}/${filename}`).put(image);
+    const uploadTask = firebase.storage.ref(`images/${entity}/${identifier}/${filename}`)
+      .put(image
+      );
     
     uploadTask.on(
       "state_changed",
