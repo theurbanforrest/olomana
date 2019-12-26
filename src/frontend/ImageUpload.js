@@ -22,13 +22,24 @@ class ImageUpload extends Component {
     const { image } = this.state;
     const { thread, threadUid, firebase } = this.props;
 
-    /// If thread
+    /// If this is a thread, put in /threads path.  Else fail gracefully
     //
     let entity = thread ? "threads" : "unknownEntity";
+
+    /// If threadUid is present, put in /{threadUid} path.  Else fail gracefully
+    //
     let identifier = threadUid ? threadUid : "unknownIdentifier";
 
-    const uploadTask = firebase.storage.ref(`images/${entity}/${identifier}/${image.name}`).put(image);
-    //const uploadTask = firebase.stFilePut('images',entity,identifier,image.name);
+    /// Get timestamp as a prefix for filename.  Prevents overwriting of files with same name
+    /// e.g. Uploading from iPhone is always "image.jpeg" so need to differentiate
+    //
+    const utc = new Date().getTime();
+    const filename = `${utc}_${image.name}`;
+
+    /// TO-DO: Abstract away to firebase -- https://github.com/theurbanforrest/olomana/issues/34
+    //
+    const uploadTask = firebase.storage.ref(`images/${entity}/${identifier}/${filename}`).put(image);
+    
     uploadTask.on(
       "state_changed",
       snapshot => {
@@ -48,7 +59,7 @@ class ImageUpload extends Component {
           .ref("images")
           .child(entity)
           .child(identifier)
-          .child(image.name)
+          .child(filename)
           .getDownloadURL()
           .then(url => {
             this.setState({ url });

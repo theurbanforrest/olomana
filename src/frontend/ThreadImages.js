@@ -86,19 +86,19 @@ class ThreadImages extends Component {
             />
           }
           <h5>ThreadImages</h5>
-          <Col xs={12} md={6}>
+
             {!loading &&
-              <div>
+              <Row>
                 {imageUrls.map(url => (
-                  <Image src={url} />
+                  <Col md={4}>
+                    <Image src={url} width={400} />
+                  </Col>
                 ))}
-              </div>
+              </Row>
             }
             {error &&
               <p>{error}</p>
             }
-          </Col>
-
         </Row>
     )
   }

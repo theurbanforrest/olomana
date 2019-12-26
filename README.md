@@ -40,15 +40,31 @@ npm start
 * /threads gets all from the Firestore Collection 'threads'
 * /dashboard gets only the docs from 'threads' that belong to the logged in user.
 
+##### 3. Deploy
+
+It's a good idea to set up 2 projects: 1 Beta and 1 Production.  When ready to deploy to an environment, it's easy.  Run via command line:
+
+```bash
+npm run-script build
+firebase use name-of-your-firebase-project
+firebase deploy
+```
+
+Note that .env.local applies to both environments.  For environment-specific configs, we need to still get this from a service (still TBD - likely Firebase SiteConfig)
+
 
 ### Firebase
+
+Firebase was chosen as our backend because of its near turnkey functions, thorough docs, and freemium model.  Services this project uses:
+
+
 * Authentication: the Source Of Record (SOR) for all unique users
 * Realtime Database: $$ by connection, not action.  Therefore, using for common lookups (i.e. /users for user data) and future online/offline features.  Does not scale well but not a near-term issue.
-
 * Firestore: Great NoSQL db for querying and pagination, both of which we will use heavily.  Also scales better supposedly.
+* Storage: For user-upload files (i.e. images for Threads)
 
 ### Active Branches
 
 `master` is the completion of Robin Wieruch's tutorial
-`feature/v1-posts` is working towards completion of a true boilerplate
+`develop` is working towards completion of a true boilerplate
 
