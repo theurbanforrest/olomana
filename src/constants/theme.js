@@ -7,9 +7,12 @@ export const APP = {
 
 }
 
+export const IMAGE_CAROUSEL = {
+
+}
+
 export const ROUTER = {
 	"paddingTop":"6em",
-  "paddingLeft":"1.5em",
   "paddingRight":"1.5em"
 }
 export const NAVBAR = {
