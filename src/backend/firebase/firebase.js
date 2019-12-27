@@ -223,70 +223,6 @@
 
 	  			}
 
-
-	  			/**
-	  			fsThreadsByStatusPaginated = (statusArr,pageNum) => {
-
-	  				let pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
-
-	  				return this.fsThreadsByStatus(statusArr)
-	  					.get()
-	  					.then(
-	  						querySnapshot => {
-
-	  							// Firestore is unable to get us the path as part of .data()
-								// So we need to get it ourselves
-								//
-
-								//e.g. given pageNum == 8, pageSize == 10
-
-								const querySize = querySnapshot.size;
-								const startIndex = (pageNum * pageSize) - pageSize;
-								let endIndex = startIndex + pageSize;
-
-								/// If this segment is incomplete, then update to max
-								//
-								//
-
-								if(endIndex + 1 > querySize){
-
-									endIndex = querySize;
-
-								}
-
-								//startIndex is 79, endIndex is 89
-								//e.g. reading the 80th thru 90th docs
-
-								let DocsArray = [];
-
-								for(let i=startIndex;i<endIndex;i++){
-
-								let x = {};
-								x.path = querySnapshot.docs[i].id;
-								x.data = querySnapshot.docs[i].data();
-
-								DocsArray.push(x);
-								}
-
-								// Then add the query cursor for the next set of data to get
-								//
-								//
-
-								const response = {
-									data: DocsArray,
-									fullQuerySize: querySize,
-									pageNum: pageNum
-								}
-
-								return(response)
-					          
-					        }
-	  					)
-	  					.catch(err => {alert('firebase error: ' + err.message)})
-	  					
-	  			}
-			**/
-
 		///
     	///
   		// *** Storage API ***
@@ -294,18 +230,16 @@
   			// *** Files***
 
   			/*** TO-DO validate & unit test the below functions to abstract Firebase funcs here ***/
+  				
 
-  				stFilePut = (rootPath,entity,identifier,fileName) => this.storage
-  					.ref(`${rootPath}/${entity}/${identifier}/${fileName}`).put(fileName);
+  				stThreadGetImageRefs = (threadUid) => this.storage.ref()
+  					.child('/images/threads/' +threadUid)
+  					.list({ maxResults: 6})
+  					.then(resp =>{
+  						return resp.items
+  					})
 
-  				stFilesList = (rootPath,entity,identifer) => this.storage
-  					.ref('images')
-  					.child('threads')
-  					.child(identifer).listAll();
-
-  				stFileGet = (filePath) => this.storage.ref(filePath).getDownloadUrl()
-  					.then((url)=>{return url})
-  					.catch((err)=>{return err.message})
+  				stImageGetUrl = (imageRef) => imageRef.getDownloadURL()
 	  			
 	}
 

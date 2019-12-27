@@ -24,24 +24,18 @@ class ThreadImages extends Component {
 
     const { threadUid, firebase } = this.props;
 
-    /** TO-DO -- Abstract this function away to firebase **/
-
     /// Get all files for this thread
     //
     //
-    firebase.storage.ref().child('/images/threads/' +threadUid).list({ maxResults: 6})
+    firebase.stThreadGetImageRefs(threadUid)
       .then(resp => {
-        
-        this.setState({
-          imageRefs: resp.items
-        })
-      })
-      .then(() => {
+
         /// getDownloadURL() for each of the files
         //
         //
-        this.state.imageRefs.forEach((image, index) => {
-          image.getDownloadURL()
+        resp.forEach((image, index) => {
+
+          firebase.stImageGetUrl(image)
             .then(resp => {
               this.setState({
                 imageUrls: [...this.state.imageUrls, resp]
@@ -91,7 +85,7 @@ class ThreadImages extends Component {
               <Row>
                 {imageUrls.map(url => (
                   <Col md={4}>
-                    <Image src={url} width={400} />
+                    <Image src={url} />
                   </Col>
                 ))}
               </Row>
