@@ -39,14 +39,39 @@ const NavigationAuth = ({ authUser }) => (
     >
       Dashboard
     </Button>
-      <a href='/threads?page=1'>View All</a>
-      <a href={ROUTES.HOME}>Home</a>
-      <a href={ROUTES.ACCOUNT}>Account</a>
+    <Button
+      href='/threads?page=1'
+      block
+    >
+      View All
+    </Button>
+    <Button
+      href={ROUTES.HOME}
+      block
+    >
+      Home
+    </Button>
+    <Button
+      href={ROUTES.ACCOUNT}
+      block
+    >
+      Account
+    </Button>
 
     {!!authUser && ROLES.ADMIN.includes(authUser.uid) && (
-          <a href={ROUTES.ADMIN}>Admin</a>
+          <Button
+            href={ROUTES.ADMIN}
+            block
+          >
+            Admin
+          </Button>
       )}
-      <a href={ROUTES.CREATE_THREAD}>Create Thread</a>
+      <Button
+        href={ROUTES.CREATE_THREAD}
+        block
+      >
+        Create Thread
+      </Button>
       <SignOutButton />
   </SuperMenu>
 );

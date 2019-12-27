@@ -2,23 +2,28 @@ import React, { Component } from 'react';
 import Loader from 'react-loader-spinner';
 import { withFirebase } from '../backend/firebase';
 import {
-  Row,
+  Container,
   Col,
-  Image
+  Row,
+  Carousel
 } from 'react-bootstrap';
+import * as THEME from '../constants/theme'
 
 class ThreadImages extends Component {
   constructor(props) {
     super(props);
+    this.handleSelect = this.handleSelect.bind(this);
+
     this.state = {
       
       loading: true,
-      imageRefs: [
-        './logo512.png'
-      ],
-      imageUrls: []
+      imageUrls: [],
+      index: 0,
+      direction: null,
+      error: null
 
     };
+
   }
   componentDidMount() {
 
@@ -66,35 +71,61 @@ class ThreadImages extends Component {
   }
 
   render() {
-    const { imageUrls, loading, error } = this.state;
+    const { imageUrls, loading, error, index, direction } = this.state;
 
     return(
-        <Row>
-          {loading &&
-            <Loader
-             type="BallTriangle"
-             color="#d8d8d8"
-             height={60}
-             width={130}
-             timeout={3000} //3 secs
-            />
-          }
-          <h5>ThreadImages</h5>
-
-            {!loading &&
-              <Row>
-                {imageUrls.map(url => (
-                  <Col md={4}>
-                    <Image src={url} />
-                  </Col>
-                ))}
-              </Row>
+        <Container>
+            {loading &&
+              <Loader
+               type="BallTriangle"
+               color="#d8d8d8"
+               height={60}
+               width={130}
+               timeout={3000} //3 secs
+              />
             }
-            {error &&
-              <p>{error}</p>
-            }
-        </Row>
+           <Row>
+              <Col sm={12} md={4}>
+                {!loading &&
+                      <Carousel
+                        activeIndex={index}
+                        direction={direction}
+                        onSelect={this.handleSelect}
+                        style={THEME.IMAGE_CAROUSEL}
+                      >
+                        {imageUrls.map(url => (
+                          <Carousel.Item key={url}>
+                            <img
+                              className="d-block w-100"
+                              src={url}
+                              alt="First slide"
+                            />
+                            <Carousel.Caption>
+                              <h3>Third slide label</h3>
+                              <p>
+                                Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+                              </p>
+                            </Carousel.Caption>
+                          </Carousel.Item>
+                        ))}
+                      </Carousel>
+                }
+              </Col>
+            </Row>
+            <Row>
+              {error &&
+                <p>{error}</p>
+              }
+            </Row>
+        </Container>
     )
+  }
+
+  handleSelect(selectedIndex, e) {
+    this.setState({
+      index: selectedIndex,
+      direction: e.direction,
+    });
   }
 }
 
