@@ -31,13 +31,16 @@ npm install
 npm start
 ```
 
+###### Awesome functions out-of-the-box!
 * App is now open on https://localhost:3000
-* Sign Up, Log In functions are connected to your Firebase project.  You can see new users getting added in Authentication.
-* Adding a user also logs a record in Realtime Database.
+* Firebase Authentication: users who Sign Up or Log In now appear here
+* Firebase Realtime Database: user records are also managed here.  Future: can use this to show who is currently online & connected
 
+* Firebase Cloud Firestore: threads are kept here
+* Firebase Storage: images uploaded by users are kept here
 
+###### Privileged activity
 * /account and /home are only shown if you are logged in.  Else you get redirected back to /login.
-* /threads gets all from the Firestore Collection 'threads'
 * /dashboard gets only the docs from 'threads' that belong to the logged in user.
 
 ##### 3. Deploy
