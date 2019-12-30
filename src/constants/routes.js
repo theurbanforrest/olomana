@@ -21,6 +21,7 @@ export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const THREAD = '/thread/:uid';
 export const THREADEDITOR = '/thread/:uid/edit';
+export const THREADDYNAMIC = '/thread/:uid/dynamic';
 
 /// Protected + firestore
 export const DASHBOARD = '/dashboard';

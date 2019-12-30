@@ -88,6 +88,7 @@ class ThreadImages extends Component {
               <Col sm={12} md={4}>
                 {!loading &&
                       <Carousel
+                        interval={null}
                         activeIndex={index}
                         direction={direction}
                         onSelect={this.handleSelect}

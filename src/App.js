@@ -24,6 +24,8 @@ import ViewAllThreads from './frontend/ViewAllThreads';
 import Dashboard from './frontend/Dashboard';
 import Thread from './frontend/Thread';
 import ThreadEditor from './frontend/ThreadEditor';
+import ThreadDynamic from './frontend/ThreadDynamic';
+
 import {
   Container
 } from 'react-bootstrap';
@@ -33,6 +35,7 @@ import {
 ///
 import Navigation from './frontend/Navigation';
 import * as ROUTES from './constants/routes';
+import * as THEME from './constants/theme';
 
 
 /// Firebase
@@ -75,7 +78,7 @@ class App extends Component {
           <div id='routes-wrapper'>
               <Router>
                 <Navigation />
-                  <Container>
+                  <Container style={THEME.ROUTER}>
                     <Route exact path={ROUTES.LANDING} component={Landing} />
                     <Route path={ROUTES.LOGIN} component={Login} />
                     <Route path={ROUTES.HOME} component={Home} />
@@ -89,6 +92,7 @@ class App extends Component {
                     <Route path={ROUTES.DASHBOARD} component={Dashboard} />
                     <Route exact path={ROUTES.THREAD} component={Thread} />
                     <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
+                    <Route exact path={ROUTES.THREADDYNAMIC} component={ThreadDynamic} />
                   </Container>
               </Router>
           </div>
