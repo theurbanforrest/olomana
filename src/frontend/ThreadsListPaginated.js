@@ -81,13 +81,15 @@ class ThreadsListPaginated extends Component {
               </span>
                 {this.props.ctaView && 
                   <span>
-                    <Link to={`thread/${thread.path}`}> View </Link>
+                    <Link to={`thread/${thread.path}/dynamic`}> View </Link>
                   </span>
                 }
-                { this.props.ctaEdit &&
+                { /*** Leaving in ctaEdit so user can instantly see which posts are their's ***/
+                 
+                  this.props.ctaEdit &&
                   this.props.authUser.uid === thread.data.userUid && 
                   <span>
-                    <Link to={`thread/${thread.path}/edit`}> Edit </Link>
+                    <Link to={`thread/${thread.path}/dynamic`}> Edit </Link>
                   </span>
                 }
                 { this.props.ctaUnhide &&

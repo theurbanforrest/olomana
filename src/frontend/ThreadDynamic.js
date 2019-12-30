@@ -45,7 +45,7 @@ const INITIAL_STATE = {
     body: '',
     contact: '',
 
-  // Original Props for the form - used for when user cancels out of editing
+  /// Original Props for the form - used for when user cancels out of editing
     ogHeadline: '',
     ogPrice: 0,
     ogBody: '',
@@ -266,12 +266,7 @@ class ThreadDynamicBase extends Component {
       headline,
       body,
       price,
-      contact,
-      ogHeadline,
-      ogBody,
-      ogPrice,
-      ogContact,
-      error
+      contact
     } = this.state;
 
     const { 
@@ -296,25 +291,33 @@ class ThreadDynamicBase extends Component {
           }
           {!loading && !isEditing &&
             <div>
-              <h1>{thread.headline}</h1>
-              <p>
-                <Button
-                  variant="link"
-                  size="sm"
-                  onClick={()=>this.setState({isEditing: true})}
-                >
-                  Edit
-                </Button>
-                |
-                <Button
-                  variant="link"
-                  size="sm"
-                  onClick={()=>this.onDelete()}
-                >
-                  Delete
-                </Button>
-              </p>
+              <h3>
+                {thread.headline}&nbsp;
+                - ${thread.price}
+              </h3>
+              <p><strong>
+                {thread.contact}
+              </strong></p>
             </div>
+          }
+          {!loading && isOwner && !isEditing &&
+            <p>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={()=>this.setState({isEditing: true})}
+              >
+                Edit
+              </Button>
+              |
+              <Button
+                variant="link"
+                size="sm"
+                onClick={()=>this.onDelete()}
+              >
+                Delete
+              </Button>
+            </p>
           }
           {!loading &&
             <Form onSubmit={this.onSubmit}>
@@ -378,37 +381,39 @@ class ThreadDynamicBase extends Component {
                 </Row>
 
               }
-              <Row>
-                <Form.Group
-                  as={Col}
-                  md="2"
-                  controlId="formPrice"
-                >
-                  <Form.Control
-                    disabled={isEditing ? false : true}
-                    name="price"
-                    value={price}
-                    onChange={this.onChange}
-                    type="number"
-                    placeholder="Price.."
+              {!loading && isEditing &&
+                <Row>
+                  <Form.Group
+                    as={Col}
+                    md="2"
+                    controlId="formPrice"
+                  >
+                    <Form.Control
+                      disabled={isEditing ? false : true}
+                      name="price"
+                      value={price}
+                      onChange={this.onChange}
+                      type="number"
+                      placeholder="Price.."
 
-                  />
-                </Form.Group>
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="formContact"
-                >
-                  <Form.Control
-                    disabled={isEditing ? false : true}
-                    name="contact"
-                    value={contact}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Contact.."
-                  />
-                </Form.Group>
-              </Row>
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    md="4"
+                    controlId="formContact"
+                  >
+                    <Form.Control
+                      disabled={isEditing ? false : true}
+                      name="contact"
+                      value={contact}
+                      onChange={this.onChange}
+                      type="text"
+                      placeholder="Contact.."
+                    />
+                  </Form.Group>
+                </Row>
+              }
               <Row>
                 <Form.Group
                   as={Col}
