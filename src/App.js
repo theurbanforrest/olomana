@@ -25,6 +25,7 @@ import Dashboard from './frontend/Dashboard';
 import Thread from './frontend/Thread';
 import ThreadEditor from './frontend/ThreadEditor';
 import ThreadDynamic from './frontend/ThreadDynamic';
+import Sandbox from './frontend/Sandbox';
 
 import {
   Container
@@ -93,6 +94,7 @@ class App extends Component {
                     <Route exact path={ROUTES.THREAD} component={Thread} />
                     <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
                     <Route exact path={ROUTES.THREADDYNAMIC} component={ThreadDynamic} />
+                    <Route exact path={ROUTES.SANDBOX} component={Sandbox} />
                   </Container>
               </Router>
           </div>
