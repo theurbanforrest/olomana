@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom';
 import React, { PureComponent } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -10,11 +9,16 @@ class ImageCropper extends PureComponent {
     src: null,
     crop: {
       unit: '%',
-      width: 30,
-      aspect: 2 / 3,
+      width: 50,
+      aspect: 1/1,
     },
   };
 
+  /// Select and load in the file
+  //
+
+  /** COMMENTED OUT -- Trying to figure out how to make Javscript-Load-Image work
+  
   onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
@@ -24,6 +28,21 @@ class ImageCropper extends PureComponent {
       reader.readAsDataURL(e.target.files[0]);
     }
   };
+  **/
+
+
+  /// TO-DO -- Figure out how to make this work
+  /// https://github.com/DominicTobias/react-image-crop/issues/181
+  //
+  onSelectFile = event => {
+    window.loadImage( event.target.files[0], 
+      (img) => { 
+        var base64data = img.toDataURL('image/jpeg');
+        this.setState({ 
+          src: base64data 
+        }); 
+      }, { orientation: true, } );
+  }
 
   // If you setState the crop in here you should return false.
   onImageLoaded = image => {
@@ -51,6 +70,9 @@ class ImageCropper extends PureComponent {
     }
   }
 
+  /// From https://github.com/DominicTobias/react-image-crop#usage
+  /// Returns file blob (we can upload this to Firebase)
+  //
   getCroppedImg(image, crop, fileName) {
     const canvas = document.createElement('canvas');
     const scaleX = image.naturalWidth / image.width;
@@ -102,7 +124,7 @@ class ImageCropper extends PureComponent {
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col md="6">
             {src && (
               <ReactCrop
                 src={src}
@@ -114,11 +136,10 @@ class ImageCropper extends PureComponent {
               />
             )}
           </Col>
-          <Col>
+          <Col md="6">
             {croppedImageUrl &&
               <Image
                 src={croppedImageUrl}
-                fluid
               />
             }
           </Col>
