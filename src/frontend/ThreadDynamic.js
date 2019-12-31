@@ -300,8 +300,8 @@ class ThreadDynamicBase extends Component {
               </strong></p>
             </div>
           }
-          {!loading && isOwner && !isEditing &&
-            <p>
+          {!loading && !isEditing && isOwner &&
+            <div>
               <Button
                 variant="link"
                 size="sm"
@@ -317,103 +317,83 @@ class ThreadDynamicBase extends Component {
               >
                 Delete
               </Button>
-            </p>
+            </div>
           }
-          {!loading &&
+          {!loading && isEditing &&
             <Form onSubmit={this.onSubmit}>
-              {/** Done Editing Button **/
-                isEditing &&
-                <Row>
-                  <Form.Group
-                    as={Col}
-                    md="2"
+              <Row>
+                <Form.Group
+                  as={Col}
+                  md="2"
+                >
+                  <Button
+                    variant="dark"
+                    type="submit"
+                    disabled={isInvalid ? true : false}
                   >
-                    <Button
-                      variant="light"
-                      type="submit"
-                    >
-                    Done Editing  
-                    </Button>
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    md="2"
+                  Done Editing  
+                  </Button>
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="2"
+                >
+                  <Button
+                    variant="link"
+                    onClick={()=>this.onCancel(this.state)}
                   >
-                    <Button
-                      variant="link"
-                      onClick={()=>this.onCancel(this.state)}
-                    >
-                    Cancel
-                    </Button>
-                  </Form.Group>
-                </Row>
-              }
-              {/** Headline Input **/
-                isEditing && 
-                <Row>
-                  <Form.Group
-                    as={Col}
-                    md="12"
-                    controlId="formHeadline"
-                  >
-                    <Form.Control
-                      disabled={false}
-                      size="lg"
-                      name="headline"
-                      value={headline}
-                      onChange={this.onChange}
-                      type="text"
-                      placeholder="Headline.."
-                    />
-                  </Form.Group>
-                </Row>
-              }
-              {!isEditing && !loading &&
+                  Cancel
+                  </Button>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  as={Col}
+                  md="12"
+                  controlId="formHeadline"
+                >
+                  <Form.Control
+                    disabled={false}
+                    size="lg"
+                    name="headline"
+                    value={headline}
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="Headline.."
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  as={Col}
+                  md="2"
+                  controlId="formPrice"
+                >
+                  <Form.Control
+                    disabled={isEditing ? false : true}
+                    name="price"
+                    value={price}
+                    onChange={this.onChange}
+                    type="number"
+                    placeholder="Price.."
 
-                <Row>
-                  <Form.Group>
-                    <ThreadImages
-                      firebase={firebase}
-                      threadUid={threadUid}
-                      storageRootPath={`images/threads`}
-                    />
-                  </Form.Group>
-                </Row>
-
-              }
-              {!loading && isEditing &&
-                <Row>
-                  <Form.Group
-                    as={Col}
-                    md="2"
-                    controlId="formPrice"
-                  >
-                    <Form.Control
-                      disabled={isEditing ? false : true}
-                      name="price"
-                      value={price}
-                      onChange={this.onChange}
-                      type="number"
-                      placeholder="Price.."
-
-                    />
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    md="4"
-                    controlId="formContact"
-                  >
-                    <Form.Control
-                      disabled={isEditing ? false : true}
-                      name="contact"
-                      value={contact}
-                      onChange={this.onChange}
-                      type="text"
-                      placeholder="Contact.."
-                    />
-                  </Form.Group>
-                </Row>
-              }
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="4"
+                  controlId="formContact"
+                >
+                  <Form.Control
+                    disabled={isEditing ? false : true}
+                    name="contact"
+                    value={contact}
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="Contact.."
+                  />
+                </Form.Group>
+              </Row>
               <Row>
                 <Form.Group
                   as={Col}
@@ -433,6 +413,33 @@ class ThreadDynamicBase extends Component {
                 </Form.Group>
               </Row>
             </Form>
+          }
+          {!loading && !isEditing &&
+              <Row>
+                <Col md="6">
+                  <ThreadImages
+                    firebase={firebase}
+                    threadUid={threadUid}
+                    storageRootPath={`images/threads`}
+                  />
+                </Col>
+                <Col md="6">
+                  <Form.Group
+                  as={Col}
+                  md="12"
+                  controlId="formBody"
+                >
+                  <Form.Control
+                    disabled={true}
+                    as="textarea"
+                    rows="10"
+                    name="staticBody"
+                    value={thread.body}
+                    type="text"
+                  />
+                  </Form.Group>
+                </Col>
+              </Row>
           }
           {!loading && 
             <ImageUpload
