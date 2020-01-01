@@ -1,19 +1,29 @@
 import React, { PureComponent } from 'react';
+import { Modal } from 'react-bootstrap';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
 import { Container, Col, Row, Image, Button } from 'react-bootstrap';
 
 class ImageCropper extends PureComponent {
-  state = {
-    crop: {
-      unit: '%',
-      width: 50,
-      aspect: 1/1,
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      showViaState: true,
+      crop: {
+        unit: '%',
+        width: 50,
+        aspect: 1/1,
 
-      src: null,
-    },
-  };
+        src: null,
+      },
+      croppedBlob: {
+        size: 0,
+        name: null
+      }
+    };
+  }
 
   /// Select and load in the file
   /// Using Javascript-Load-Image as detailed in react-image-crop
@@ -127,6 +137,15 @@ class ImageCropper extends PureComponent {
       );
 
   }
+
+  onModalClose = () => {
+
+    /// Get function from parent to toggle off visibility
+    //
+
+    this.props.onClose();
+
+  }
   
 
   /// Extended from https://github.com/DominicTobias/react-image-crop#usage
@@ -157,7 +176,7 @@ class ImageCropper extends PureComponent {
     return new Promise((resolve, reject) => {
       canvas.toBlob(blob => {
         if (!blob) {
-          //reject(new Error('Canvas is empty'));
+          // reject(new Error('Canvas is empty'));
           console.error('Canvas is empty');
           return;
         }
@@ -174,7 +193,8 @@ class ImageCropper extends PureComponent {
         });
         resolve(this.fileUrl);
 
-      }, 'image/jpeg');
+      /** }, 'image/jpeg'); **/  /// Adding 'image/jpeg' as a param sets it as jpeg.  To be lossless re: image quality, leave blank
+      })
     });
   }
 
@@ -184,53 +204,64 @@ class ImageCropper extends PureComponent {
   }
 
   render() {
-    const { crop, croppedImageUrl, src } = this.state;
+    const { 
+      crop, croppedImageUrl,croppedBlob,
+      src,
+      showViaState } = this.state;
+    const { threadUid, uploadLimit, showViaProps } = this.props;
 
     return (
 
-      <Container className="ImageCropper">
-        <Row>
-          <Col>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={this.onSelectFile}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col md="6">
-            {src && (
-              <ReactCrop
-                src={src}
-                crop={crop}
-                ruleOfThirds
-                onImageLoaded={this.onImageLoaded}
-                onComplete={this.onCropComplete}
-                onChange={this.onCropChange}
+      <Modal
+        show={showViaState ? true : false}
+        size="lg"
+        onHide={() => this.onModalClose()}
+      >
+        <Container className="ImageCropper">
+          <Row>
+            <Col>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={this.onSelectFile}
               />
-            )}
-          </Col>
-          <Col md="6">
-            {croppedImageUrl &&
-              <Image
-                src={croppedImageUrl}
-              />
-            }
-          </Col>
-        </Row>
-        <Row>
-          <Col md="12">
-            <Button
-              onClick={this.handleUpload}
-              disabled={src ? false : true}
-            >
-              Upload
-            </Button>
-            <p>{croppedImageUrl}</p>
-          </Col>
-        </Row>
-      </Container>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="12">
+              {src && (
+                <ReactCrop
+                  src={src}
+                  crop={crop}
+                  ruleOfThirds
+                  onImageLoaded={this.onImageLoaded}
+                  onComplete={this.onCropComplete}
+                  onChange={this.onCropChange}
+                />
+              )}
+            </Col>
+            <Col md="12">
+              {croppedImageUrl &&
+                <Image
+                  src={croppedImageUrl}
+                />
+              }
+            </Col>
+          </Row>
+          <Row>
+            <Col md="12">
+              <Button
+                onClick={this.handleUpload}
+                disabled={src && croppedBlob.size < uploadLimit ? false : true}
+              >
+                Upload
+              </Button>
+              <p>{croppedImageUrl}</p>
+              <p>{croppedBlob.size}</p>
+            </Col>
+          </Row>
+        </Container>
+      </Modal>
     );
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ImageCropper from './ImageCropper';
+import * as DATACONFIG from '../constants/dataConfig';
 import { withFirebase } from '../backend/firebase';
 
 class Sandbox extends React.Component {
@@ -11,6 +12,7 @@ class Sandbox extends React.Component {
 
       <ImageCropper
       	threadUid={null}
+      	uploadLimit={DATACONFIG.FILE_UPLOAD_LIMIT}  //Bytes.  i.e. 1M bytes == 100 kb
       	firebase={firebase}
       />
 

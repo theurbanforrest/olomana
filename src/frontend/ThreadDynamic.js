@@ -7,8 +7,9 @@ import { compose } from 'recompose';
 import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 import * as STATUSES from '../constants/statuses';
+import * as DATACONFIG from '../constants/dataConfig';
 import { withAuthorization, AuthUserContext } from '../backend/session';
-import ImageUpload from '../frontend/ImageUpload';
+import ImageCropper from '../frontend/ImageCropper';
 import ThreadImages from '../frontend/ThreadImages';
 
 
@@ -31,6 +32,7 @@ const INITIAL_STATE = {
   /// Props about owning or editing
     isOwner: null,
     isEditing: false,
+    isAddingImage: false,
 
   /// Props to get initial data
     threadUid: null,
@@ -246,6 +248,10 @@ class ThreadDynamicBase extends Component {
 
   }
 
+  onAddImage = () => { this.setState({ isAddingImage: true }) }
+
+  onStopAddingImage = () => { this.setState({ isAddingImage: false}) }
+
   componentDidMount() {
 
     this.getData(this.props);
@@ -260,6 +266,7 @@ class ThreadDynamicBase extends Component {
     const {
       isOwner,
       isEditing,
+      isAddingImage,
       threadUid,
       thread,
       loading,
@@ -307,7 +314,15 @@ class ThreadDynamicBase extends Component {
                 size="sm"
                 onClick={()=>this.setState({isEditing: true})}
               >
-                Edit
+                Edit Thread
+              </Button>
+              |
+              <Button
+                variant="link"
+                size="sm"
+                onClick={()=>this.onAddImage()}
+              >
+                Add Image
               </Button>
               |
               <Button
@@ -315,7 +330,7 @@ class ThreadDynamicBase extends Component {
                 size="sm"
                 onClick={()=>this.onDelete()}
               >
-                Delete
+                Delete Thread
               </Button>
             </div>
           }
@@ -441,10 +456,13 @@ class ThreadDynamicBase extends Component {
                 </Col>
               </Row>
           }
-          {!loading && 
-            <ImageUpload
-              thread
-              threadUid={this.state.threadUid}
+          {!loading && isAddingImage &&
+            <ImageCropper
+              onClose={() => this.onStopAddingImage()}
+              thread={thread}
+              threadUid={threadUid}
+              uploadLimit={DATACONFIG.FILE_UPLOAD_LIMIT}
+              firebase={firebase}
             />
           }
         </div>
