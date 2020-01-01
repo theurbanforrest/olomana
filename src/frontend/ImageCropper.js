@@ -2,36 +2,21 @@ import React, { PureComponent } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
-import { Container, Col, Row, Image } from 'react-bootstrap';
+import { Container, Col, Row, Image, Button } from 'react-bootstrap';
 
 class ImageCropper extends PureComponent {
   state = {
-    src: null,
     crop: {
       unit: '%',
       width: 50,
       aspect: 1/1,
+
+      src: null,
     },
   };
 
   /// Select and load in the file
-  //
-
-  /** COMMENTED OUT -- Trying to figure out how to make Javscript-Load-Image work
-  
-  onSelectFile = e => {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () =>
-        this.setState({ src: reader.result })
-      );
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-  **/
-
-
-  /// TO-DO -- Figure out how to make this work
+  /// Using Javascript-Load-Image as detailed in react-image-crop
   /// https://github.com/DominicTobias/react-image-crop/issues/181
   //
   onSelectFile = event => {
@@ -49,9 +34,27 @@ class ImageCropper extends PureComponent {
     this.imageRef = image;
   };
 
+  /// On completion of user doing a crop
+  //
   onCropComplete = crop => {
     this.makeClientCrop(crop);
   };
+
+  async makeClientCrop(crop) {
+
+    if (this.imageRef && crop.width && crop.height) {
+      const croppedImageUrl = await this.getCroppedImg(
+        this.imageRef,
+        crop,
+        'newFile.jpeg'
+      );
+
+      this.setState({
+        croppedImageUrl
+      });
+    }
+  }
+
 
   onCropChange = (crop, percentCrop) => {
     // You could also use percentCrop:
@@ -59,19 +62,77 @@ class ImageCropper extends PureComponent {
     this.setState({ crop });
   };
 
-  async makeClientCrop(crop) {
-    if (this.imageRef && crop.width && crop.height) {
-      const croppedImageUrl = await this.getCroppedImg(
-        this.imageRef,
-        crop,
-        'newFile.jpeg'
-      );
-      this.setState({ croppedImageUrl });
-    }
-  }
+  /// Upload the croppedBlob to Storage
+  //
+  handleUpload = () => {
 
-  /// From https://github.com/DominicTobias/react-image-crop#usage
-  /// Returns file blob (we can upload this to Firebase)
+    const { src, croppedBlob, croppedImageUrl, crop } = this.state;
+    const { thread, threadUid, firebase } = this.props;  /// Requires parent to be withFirebase()
+
+        /// If this is a thread, put in /threads path.  Else fail gracefully
+      //
+      let entity = thread ? "threads" : "unknownEntity";
+
+      /// If threadUid is present, put in /{threadUid} path.  Else fail gracefully
+      //
+      let identifier = threadUid ? threadUid : "unknownIdentifier";
+
+      /// Get timestamp as a prefix for filename.  Prevents overwriting of files with same name
+      /// e.g. Uploading from iPhone is always "image.jpeg" so need to differentiate
+      //
+      const utcCreated = new Date().getTime();
+      const filename = `${utcCreated}_${croppedBlob.name}`;
+
+      /// TO-DO: Abstract away to firebase -- https://github.com/theurbanforrest/olomana/issues/34
+      /// Current problem is that when state changes, we do setState()
+      /// Need to figure out how to abstract to separate file
+      //
+
+      const uploadTask = firebase.storage.ref(`images/${entity}/${identifier}/${filename}`)
+        .put(croppedBlob);
+
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // progress function ...
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          this.setState({ progress });
+        },
+        error => {
+          // Error function ...
+          console.log(error);
+        },
+        () => {
+          // complete function ...
+
+          /// Get the URL from Firebase Storage to confirm success
+          this.props.firebase.storage
+            .ref("images")
+            .child(entity)
+            .child(identifier)
+            .child(filename)
+            .getDownloadURL()
+            .then(url => {
+              this.setState({ url });
+              alert('success!')
+            })
+            .catch(err => {
+              alert(err.message);
+            });
+
+          
+        }
+      );
+
+  }
+  
+
+  /// Extended from https://github.com/DominicTobias/react-image-crop#usage
+  /// 
+  /// Get the cropped area as a blob --> setState() as croppedBlob
+  /// Return the window.URL (for user to preview before uploading)
   //
   getCroppedImg(image, crop, fileName) {
     const canvas = document.createElement('canvas');
@@ -101,11 +162,25 @@ class ImageCropper extends PureComponent {
           return;
         }
         blob.name = fileName;
+
         window.URL.revokeObjectURL(this.fileUrl);
         this.fileUrl = window.URL.createObjectURL(blob);
+
+        /// Sets the cropped area's blob in state
+        /// to get uploaded later
+        //
+        this.setState({
+          croppedBlob: blob
+        });
         resolve(this.fileUrl);
+
       }, 'image/jpeg');
     });
+  }
+
+  async getCroppedBlob() {
+    const { src, crop, fileName } = this.state;
+    const croppedImg = await this.getCroppedImg(src, crop, fileName);
   }
 
   render() {
@@ -142,6 +217,17 @@ class ImageCropper extends PureComponent {
                 src={croppedImageUrl}
               />
             }
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <Button
+              onClick={this.handleUpload}
+              disabled={src ? false : true}
+            >
+              Upload
+            </Button>
+            <p>{croppedImageUrl}</p>
           </Col>
         </Row>
       </Container>
