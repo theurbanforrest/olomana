@@ -61,3 +61,9 @@ export const NAVBAR = {
     background: 'rgba(0, 0, 0, 0.3)'
   }
 } 
+
+export const FOOTER = {
+  "marginTop":"1em",
+  "height":"24em",
+  "background-color":"green"
+}

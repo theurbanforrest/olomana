@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import Loader from 'react-loader-spinner';
 
 import { compose } from 'recompose';
 import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 import * as STATUSES from '../constants/statuses';
+import * as DATACONFIG from '../constants/dataConfig';
 import { withAuthorization, AuthUserContext } from '../backend/session';
-import ImageUpload from '../frontend/ImageUpload';
+import ImageCropper from '../frontend/ImageCropper';
 import ThreadImages from '../frontend/ThreadImages';
 
 
@@ -31,6 +32,7 @@ const INITIAL_STATE = {
   /// Props about owning or editing
     isOwner: null,
     isEditing: false,
+    isAddingImage: false,
 
   /// Props to get initial data
     threadUid: null,
@@ -246,6 +248,10 @@ class ThreadDynamicBase extends Component {
 
   }
 
+  onAddImage = () => { this.setState({ isAddingImage: true }) }
+
+  onStopAddingImage = () => { this.setState({ isAddingImage: false}) }
+
   componentDidMount() {
 
     this.getData(this.props);
@@ -260,6 +266,7 @@ class ThreadDynamicBase extends Component {
     const {
       isOwner,
       isEditing,
+      isAddingImage,
       threadUid,
       thread,
       loading,
@@ -270,7 +277,8 @@ class ThreadDynamicBase extends Component {
     } = this.state;
 
     const { 
-      firebase
+      firebase,
+      history
     } = this.props;
     
     const isInvalid =
@@ -279,8 +287,8 @@ class ThreadDynamicBase extends Component {
 
       return(
 
-        <div>
-          {loading &&
+        <Container>
+          {/** Loading Spinner **/ loading &&
             <Loader
              type="BallTriangle"
              color="#d8d8d8"
@@ -289,142 +297,62 @@ class ThreadDynamicBase extends Component {
              timeout={3000} //3 secs
             />
           }
-          {!loading && !isEditing &&
-            <div>
-              <h3>
-                {thread.headline}&nbsp;
-                - ${thread.price}
-              </h3>
-              <p><strong>
-                {thread.contact}
-              </strong></p>
-            </div>
+          {/** Header items **/ !loading && !isEditing &&
+            <Row>
+              <Col md="12">
+                <h3>
+                  {thread.headline}&nbsp;
+                  - ${thread.price}
+                </h3>
+              </Col>
+              <Col md="12">
+                <p><strong>
+                  {thread.contact}
+                </strong></p>
+              </Col>
+            </Row>
           }
-          {!loading && !isEditing && isOwner &&
-            <div>
-              <Button
-                variant="link"
-                size="sm"
-                onClick={()=>this.setState({isEditing: true})}
-              >
-                Edit
-              </Button>
-              |
-              <Button
-                variant="link"
-                size="sm"
-                onClick={()=>this.onDelete()}
-              >
-                Delete
-              </Button>
-            </div>
-          }
-          {!loading && isEditing &&
-            <Form onSubmit={this.onSubmit}>
-              <Row>
-                <Form.Group
-                  as={Col}
-                  md="2"
+          <Row>
+            <Col md="6">
+              {/** ThreadImages **/ !loading && 
+                <ThreadImages
+                  firebase={firebase}
+                  threadUid={threadUid}
+                  storageRootPath={DATACONFIG.IMAGECROPPER_STORAGE_ROOT_PATH}
+                />
+              }
+            </Col>
+            <Col md="6">
+            {/** CTA's if owner **/ !loading && !isEditing && isOwner &&
+              <Container>
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={()=>this.setState({isEditing: true})}
                 >
-                  <Button
-                    variant="dark"
-                    type="submit"
-                    disabled={isInvalid ? true : false}
-                  >
-                  Done Editing  
-                  </Button>
-                </Form.Group>
-                <Form.Group
-                  as={Col}
-                  md="2"
+                  Edit Thread
+                </Button>
+                |
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={()=>this.onAddImage()}
                 >
-                  <Button
-                    variant="link"
-                    onClick={()=>this.onCancel(this.state)}
-                  >
-                  Cancel
-                  </Button>
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group
-                  as={Col}
-                  md="12"
-                  controlId="formHeadline"
+                  Add Image
+                </Button>
+                |
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={()=>this.onDelete()}
                 >
-                  <Form.Control
-                    disabled={false}
-                    size="lg"
-                    name="headline"
-                    value={headline}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Headline.."
-                  />
-                </Form.Group>
-              </Row>
-              <Row>
+                  Delete Thread
+                </Button>
+              </Container>
+            }
+            {/** Body displayed **/ !loading && !isEditing &&
+              <div>
                 <Form.Group
-                  as={Col}
-                  md="2"
-                  controlId="formPrice"
-                >
-                  <Form.Control
-                    disabled={isEditing ? false : true}
-                    name="price"
-                    value={price}
-                    onChange={this.onChange}
-                    type="number"
-                    placeholder="Price.."
-
-                  />
-                </Form.Group>
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="formContact"
-                >
-                  <Form.Control
-                    disabled={isEditing ? false : true}
-                    name="contact"
-                    value={contact}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Contact.."
-                  />
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group
-                  as={Col}
-                  md="12"
-                  controlId="formBody"
-                >
-                  <Form.Control
-                    disabled={isEditing ? false : true}
-                    as="textarea"
-                    rows="10"
-                    name="body"
-                    value={body}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Body.."
-                  />
-                </Form.Group>
-              </Row>
-            </Form>
-          }
-          {!loading && !isEditing &&
-              <Row>
-                <Col md="6">
-                  <ThreadImages
-                    firebase={firebase}
-                    threadUid={threadUid}
-                    storageRootPath={`images/threads`}
-                  />
-                </Col>
-                <Col md="6">
-                  <Form.Group
                   as={Col}
                   md="12"
                   controlId="formBody"
@@ -437,17 +365,112 @@ class ThreadDynamicBase extends Component {
                     value={thread.body}
                     type="text"
                   />
-                  </Form.Group>
-                </Col>
-              </Row>
-          }
-          {!loading && 
-            <ImageUpload
-              thread
-              threadUid={this.state.threadUid}
+                </Form.Group>
+              </div>
+            }
+            {/** Editing mode **/ !loading && isEditing &&
+              <Container>
+                <Form onSubmit={this.onSubmit}>
+                  <Row>
+                    <Form.Group as={Col}>
+                      <Button
+                        variant="dark"
+                        type="submit"
+                        disabled={isInvalid ? true : false}
+                      >
+                      Done Editing  
+                      </Button>
+                      <Button
+                        variant="link"
+                        onClick={()=>this.onCancel(this.state)}
+                      >
+                      Cancel
+                      </Button>
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Form.Group
+                      as={Col}
+                      md="12"
+                      controlId="formHeadline"
+                    >
+                      <Form.Control
+                        disabled={false}
+                        size="lg"
+                        name="headline"
+                        value={headline}
+                        onChange={this.onChange}
+                        type="text"
+                        placeholder="Headline.."
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Form.Group
+                      as={Col}
+                      md="6"
+                      controlId="formPrice"
+                    >
+                      <Form.Control
+                        disabled={isEditing ? false : true}
+                        name="price"
+                        value={price}
+                        onChange={this.onChange}
+                        type="number"
+                        placeholder="Price.."
+
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      md="6"
+                      controlId="formContact"
+                    >
+                      <Form.Control
+                        disabled={isEditing ? false : true}
+                        name="contact"
+                        value={contact}
+                        onChange={this.onChange}
+                        type="text"
+                        placeholder="Contact.."
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Form.Group
+                      as={Col}
+                      md="12"
+                      controlId="formBody"
+                    >
+                      <Form.Control
+                        disabled={isEditing ? false : true}
+                        as="textarea"
+                        rows="10"
+                        name="body"
+                        value={body}
+                        onChange={this.onChange}
+                        type="text"
+                        placeholder="Body.."
+                      />
+                    </Form.Group>
+                  </Row>
+                </Form>
+              </Container>
+            }
+            </Col>
+          </Row>
+          
+          {/** Image Cropper Flow as modal **/ !loading && isAddingImage &&
+            <ImageCropper
+              onClose={() => this.onStopAddingImage()}
+              thread={thread}
+              threadUid={threadUid}
+              uploadLimit={DATACONFIG.IMAGECROPPER_UPLOAD_SIZE_LIMIT}
+              firebase={firebase}
+              onCroppedImageUploadSuccess={() => history.go(0)}
             />
           }
-        </div>
+        </Container>
 
       );
   }

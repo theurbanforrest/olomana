@@ -3,6 +3,7 @@
 
 /// Public + static
 export const LANDING = '/';
+export const SANDBOX = '/sandbox';
 
 /// Public + real-time database
 export const LOGIN = '/login';
