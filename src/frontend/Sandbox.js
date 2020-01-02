@@ -12,7 +12,7 @@ class Sandbox extends React.Component {
 
       <ImageCropper
       	threadUid={null}
-      	uploadLimit={DATACONFIG.FILE_UPLOAD_LIMIT}  //Bytes.  i.e. 1M bytes == 100 kb
+      	uploadLimit={DATACONFIG.IMAGECROPPER_UPLOAD_SIZE_LIMIT}  //Bytes.  i.e. 1M bytes == 100 kb
       	firebase={firebase}
       />
 

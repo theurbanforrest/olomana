@@ -234,7 +234,7 @@
 
   				stThreadGetImageRefs = (threadUid) => this.storage.ref()
   					.child('/images/threads/' +threadUid)
-  					.list({ maxResults: 6})
+  					.list({ maxResults: DATACONFIG.THREADIMAGES_GET_LIMIT})
   					.then(resp =>{
   						return resp.items
   					})

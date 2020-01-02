@@ -26,6 +26,7 @@ import Thread from './frontend/Thread';
 import ThreadEditor from './frontend/ThreadEditor';
 import ThreadDynamic from './frontend/ThreadDynamic';
 import Sandbox from './frontend/Sandbox';
+import Footer from './frontend/Footer';
 
 import {
   Container
@@ -76,27 +77,30 @@ class App extends Component {
           /// i.e. /thread/x vs. /thread/x/edit
           ///
         }
-          <div id='routes-wrapper'>
-              <Router>
-                <Navigation />
-                  <Container style={THEME.ROUTER}>
-                    <Route exact path={ROUTES.LANDING} component={Landing} />
-                    <Route path={ROUTES.LOGIN} component={Login} />
-                    <Route path={ROUTES.HOME} component={Home} />
-                    <Route path={ROUTES.SIGN_UP} component={SignUp} />
-                    <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
-                    <Route path={ROUTES.ACCOUNT} component={Account} />
-                    <Route path={ROUTES.ADMIN} component={Admin} />
+          <div>
+            <div id='routes-wrapper'>
+                <Router>
+                  <Navigation />
+                    <Container style={THEME.ROUTER}>
+                      <Route exact path={ROUTES.LANDING} component={Landing} />
+                      <Route path={ROUTES.LOGIN} component={Login} />
+                      <Route path={ROUTES.HOME} component={Home} />
+                      <Route path={ROUTES.SIGN_UP} component={SignUp} />
+                      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+                      <Route path={ROUTES.ACCOUNT} component={Account} />
+                      <Route path={ROUTES.ADMIN} component={Admin} />
 
-                    <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
-                    <Route path={ROUTES.VIEW_ALL_THREADS} component={ViewAllThreads} />
-                    <Route path={ROUTES.DASHBOARD} component={Dashboard} />
-                    <Route exact path={ROUTES.THREAD} component={Thread} />
-                    <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
-                    <Route exact path={ROUTES.THREADDYNAMIC} component={ThreadDynamic} />
-                    <Route exact path={ROUTES.SANDBOX} component={Sandbox} />
-                  </Container>
-              </Router>
+                      <Route path={ROUTES.CREATE_THREAD} component={CreateThread} />
+                      <Route path={ROUTES.VIEW_ALL_THREADS} component={ViewAllThreads} />
+                      <Route path={ROUTES.DASHBOARD} component={Dashboard} />
+                      <Route exact path={ROUTES.THREAD} component={Thread} />
+                      <Route exact path={ROUTES.THREADEDITOR} component={ThreadEditor} />
+                      <Route exact path={ROUTES.THREADDYNAMIC} component={ThreadDynamic} />
+                      <Route exact path={ROUTES.SANDBOX} component={Sandbox} />
+                    </Container>
+                </Router>
+            </div>
+            <Footer />
           </div>
       </AuthUserContext.Provider>
     );

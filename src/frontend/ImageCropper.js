@@ -10,7 +10,6 @@ class ImageCropper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showViaState: true,
       crop: {
         unit: '%',
         width: 50,
@@ -76,7 +75,7 @@ class ImageCropper extends PureComponent {
   //
   handleUpload = () => {
 
-    const { src, croppedBlob, croppedImageUrl, crop } = this.state;
+    const { croppedBlob } = this.state;
     const { thread, threadUid, firebase } = this.props;  /// Requires parent to be withFirebase()
 
         /// If this is a thread, put in /threads path.  Else fail gracefully
@@ -127,6 +126,10 @@ class ImageCropper extends PureComponent {
             .then(url => {
               this.setState({ url });
               alert('success!')
+
+              /// And reload the page
+              this.props.onCroppedImageUploadSuccess();
+
             })
             .catch(err => {
               alert(err.message);
@@ -198,22 +201,16 @@ class ImageCropper extends PureComponent {
     });
   }
 
-  async getCroppedBlob() {
-    const { src, crop, fileName } = this.state;
-    const croppedImg = await this.getCroppedImg(src, crop, fileName);
-  }
-
   render() {
     const { 
-      crop, croppedImageUrl,croppedBlob,
-      src,
-      showViaState } = this.state;
-    const { threadUid, uploadLimit, showViaProps } = this.props;
+      crop, croppedImageUrl, croppedBlob,
+      src } = this.state;
+    const { uploadLimit } = this.props;
 
     return (
 
       <Modal
-        show={showViaState ? true : false}
+        show={true}
         size="lg"
         onHide={() => this.onModalClose()}
       >
