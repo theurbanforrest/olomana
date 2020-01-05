@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
 import ThreadsListPaginated from './ThreadsListPaginated';
+import { LoaderFullScreen } from '../frontend/Loaders';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import * as STATUSES from '../constants/statuses';
 import * as DATACONFIG from '../constants/dataConfig';
@@ -41,7 +42,11 @@ class DashboardPage extends Component {
               <h1>Dashboard</h1>
               <h3>Hello, {authUser.email}</h3>
 
-              {loading && <div>Loading ...</div>}
+              {loading &&
+                <LoaderFullScreen
+                  type="BallTriangle"
+                />
+              }
 
               <ThreadsListPaginated
                 title='My Threads'

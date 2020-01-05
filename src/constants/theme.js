@@ -12,6 +12,9 @@ export const IMAGE_CAROUSEL = {
 
 }
 
+export const LOADER_FULL_SCREEN = {
+  "height":"24em"
+}
 export const ROUTER = {
 	"paddingTop":"6em",
   "paddingRight":"1.5em"

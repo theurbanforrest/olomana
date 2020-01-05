@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import Loader from 'react-loader-spinner';
+import { LoaderFullScreen } from '../frontend/Loaders';
 
 import { compose } from 'recompose';
 import { withFirebase } from '../backend/firebase';
@@ -289,13 +289,9 @@ class ThreadDynamicBase extends Component {
       return(
 
         <Container>
-          {/** Loading Spinner **/ loading &&
-            <Loader
-             type="BallTriangle"
-             color="#d8d8d8"
-             height={60}
-             width={130}
-             timeout={3000} //3 secs
+          {/** Loading UX **/ loading &&
+            <LoaderFullScreen
+               type="BallTriangle"
             />
           }
           {/** Header items **/ !loading && !isEditing &&
