@@ -8,6 +8,7 @@ export const APP = {
 }
 
 export const IMAGE_CAROUSEL = {
+  "paddingBottom":"1.5em"
 
 }
 
@@ -65,5 +66,5 @@ export const NAVBAR = {
 export const FOOTER = {
   "marginTop":"1em",
   "height":"24em",
-  "background-color":"green"
+  "backgroundColor":"green"
 }

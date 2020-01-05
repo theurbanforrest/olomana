@@ -24,8 +24,8 @@ class ThreadsListPaginated extends Component {
       threads: [],
       error: null
     };
-
   }
+
   componentDidMount() {
 
     this.getData();
@@ -74,10 +74,11 @@ class ThreadsListPaginated extends Component {
           {!loading && threads.map(thread => (
             <li key={thread.path}>
               <span>
-                <strong>Headline:</strong> {thread.data.headline}
+                <b>{thread.data.headline}</b>
               </span>
+              {` - `}
               <span>
-                <strong>Price:</strong> {thread.data.price}
+                {thread.data.price}
               </span>
                 {this.props.ctaView && 
                   <span>

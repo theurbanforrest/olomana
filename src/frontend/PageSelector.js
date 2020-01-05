@@ -54,35 +54,36 @@ class PageSelector extends Component {
   	return(
   		
   		<div>
-	      <h5>Page Selector</h5>
+	    	<h5>Page Selector</h5>
+      		<div>
+		      	<p> Full query is {fullQuerySize} </p>
+		      	<h6> Previous </h6>
+		      	{previous.map(obj => (
+		        	<li key={obj.pageNum}>
+		        		{
+			        		/// <Link /> does not work because
+			        		/// it does not reload the page.  Using vanilla HTML's <a/>
+			        		//  does the job.  Future: improve this.
+			        		//
+		        		}
+		        		<a href={`/threads?page=${obj.pageNum}`}>
+		        			Page {obj.pageNum}
+		        		</a>
+		        	</li>
+		        ))}
 
-	      	<p> Full query is {fullQuerySize} </p>
-	      	<h6> Previous </h6>
-	      	{previous.map(obj => (
-	        	<li key={obj.pageNum}>
-	        		{
-		        		/// <Link /> does not work because
-		        		/// it does not reload the page.  Using vanilla HTML's <a/>
-		        		//  does the job.  Future: improve this.
-		        		//
-	        		}
-	        		<a href={`/threads?page=${obj.pageNum}`}>
-	        			Page {obj.pageNum}
-	        		</a>
-	        	</li>
-	        ))}
+		        <h6> Active </h6>
+		      	Active Page is {activePage}
 
-	        <h6> Active </h6>
-	      	Active Page is {activePage}
-
-	      	<h6> Next </h6>
-	        {next.map(obj => (
-	        	<li key={obj.pageNum}>
-	        		<a href={`/threads?page=${obj.pageNum}`}>
-	        			Page {obj.pageNum}
-	        		</a>
-	        	</li>
-	        ))}
+		      	<h6> Next </h6>
+		        {next.map(obj => (
+		        	<li key={obj.pageNum}>
+		        		<a href={`/threads?page=${obj.pageNum}`}>
+		        			Page {obj.pageNum}
+		        		</a>
+		        	</li>
+		        ))}
+	        </div>
 	    </div>
   		
   	)

@@ -8,6 +8,7 @@ import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 import * as STATUSES from '../constants/statuses';
 import * as DATACONFIG from '../constants/dataConfig';
+import * as THEME from '../constants/theme';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import ImageCropper from '../frontend/ImageCropper';
 import ThreadImages from '../frontend/ThreadImages';
@@ -300,10 +301,10 @@ class ThreadDynamicBase extends Component {
           {/** Header items **/ !loading && !isEditing &&
             <Row>
               <Col md="12">
-                <h3>
-                  {thread.headline}&nbsp;
-                  - ${thread.price}
-                </h3>
+                <h2>
+                    {thread.headline}&nbsp;
+                    - ${thread.price}
+                </h2>
               </Col>
               <Col md="12">
                 <p><strong>
@@ -313,7 +314,7 @@ class ThreadDynamicBase extends Component {
             </Row>
           }
           <Row>
-            <Col md="6">
+            <Col md="6" styles={THEME.IMAGE_CAROUSEL}>
               {/** ThreadImages **/ !loading && 
                 <ThreadImages
                   firebase={firebase}
@@ -357,14 +358,9 @@ class ThreadDynamicBase extends Component {
                   md="12"
                   controlId="formBody"
                 >
-                  <Form.Control
-                    disabled={true}
-                    as="textarea"
-                    rows="10"
-                    name="staticBody"
-                    value={thread.body}
-                    type="text"
-                  />
+                  <p>
+                    {thread.body}
+                  </p>
                 </Form.Group>
               </div>
             }
