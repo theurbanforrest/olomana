@@ -57,7 +57,7 @@ class ViewAllThreadsPage extends Component {
               //
               //
               <ThreadsListPaginated
-                statuses={[STATUSES.VISIBLE]}
+                statuses={[STATUSES.VISIBLE_BREEDER]}
                 authUser={authUser}
                 activePage={activePage}
                 pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}

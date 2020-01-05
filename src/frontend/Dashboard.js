@@ -31,7 +31,7 @@ class DashboardPage extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, showHiddenByAdmin } = this.state;
 
     return (
 
@@ -50,7 +50,7 @@ class DashboardPage extends Component {
                   authUser.uid
                 ]}
                 statuses={[
-                  STATUSES.VISIBLE
+                  STATUSES.VISIBLE_BREEDER
                 ]}
                 activePage={1}
                 pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
@@ -58,21 +58,24 @@ class DashboardPage extends Component {
                 ctaEdit
               />
 
-              <ThreadsListPaginated
-                title='Hidden By Admin'
-                authUser={authUser}
-                users={[
-                  authUser.uid
-                ]}
-                statuses={[
-                  STATUSES.HIDDEN_BY_ADMIN
-                ]}
-                activePage={1}
-                pageSize={DATACONFIG.HIDDENBYADMIN_PAGE_SIZE}
-                ctaView
-                ctaEdit
-                ctaUnhide
-              />
+              { showHiddenByAdmin &&
+                <ThreadsListPaginated
+                  title='Hidden By Admin'
+                  authUser={authUser}
+                  users={[
+                    authUser.uid
+                  ]}
+                  statuses={[
+                    STATUSES.HIDDEN_BY_ADMIN
+                  ]}
+                  activePage={1}
+                  pageSize={DATACONFIG.HIDDENBYADMIN_PAGE_SIZE}
+                  ctaView
+                  ctaEdit
+                  ctaUnhide
+                  pageSelectorVisible
+                />
+              }
 
             </div>
           )}

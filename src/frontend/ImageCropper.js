@@ -20,7 +20,8 @@ class ImageCropper extends PureComponent {
       croppedBlob: {
         size: 0,
         name: null
-      }
+      },
+      isUploading: false
     };
   }
 
@@ -78,6 +79,10 @@ class ImageCropper extends PureComponent {
     const { croppedBlob } = this.state;
     const { thread, threadUid, firebase } = this.props;  /// Requires parent to be withFirebase()
 
+      this.setState({
+        isUploading: true
+      });
+
         /// If this is a thread, put in /threads path.  Else fail gracefully
       //
       let entity = thread ? "threads" : "unknownEntity";
@@ -130,9 +135,16 @@ class ImageCropper extends PureComponent {
               /// And reload the page
               this.props.onCroppedImageUploadSuccess();
 
+              this.setState({
+                isUploading: false
+              });
+
             })
             .catch(err => {
               alert(err.message);
+              this.setState({
+                isUploading: false
+              });
             });
 
           
@@ -204,7 +216,9 @@ class ImageCropper extends PureComponent {
   render() {
     const { 
       crop, croppedImageUrl, croppedBlob,
-      src } = this.state;
+      src,
+      isUploading
+    } = this.state;
     const { uploadLimit } = this.props;
 
     return (
@@ -249,7 +263,7 @@ class ImageCropper extends PureComponent {
             <Col md="12">
               <Button
                 onClick={this.handleUpload}
-                disabled={src && croppedBlob.size < uploadLimit ? false : true}
+                disabled={src && croppedBlob.size < uploadLimit && !isUploading ? false : true}
               >
                 Upload
               </Button>

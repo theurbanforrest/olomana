@@ -49,12 +49,12 @@ class CreateThreadFormBase extends Component {
 
       //x. Get UTC timestamp (for ordering purposes)
       //x. Get user's UID (so we know who this post belongs to)
-      //x. Set status as 1 (visible)
+      //x. Set status as 21 for BREEDERS_VISIBLE
 
       const utcCreated = new Date().getTime();
       const utcModified = utcCreated;
       let userUid = this.props.userUid;
-      let status = 1;
+      let status = 21;
 
       this.props.firebase
         .fsThreads()
