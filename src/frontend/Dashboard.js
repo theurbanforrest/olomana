@@ -50,6 +50,7 @@ class DashboardPage extends Component {
                   authUser.uid
                 ]}
                 statuses={[
+                  STATUSES.VISIBLE,
                   STATUSES.VISIBLE_BREEDER
                 ]}
                 activePage={1}
