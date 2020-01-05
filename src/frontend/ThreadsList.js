@@ -12,7 +12,7 @@ import React, { Component } from 'react';
 import { withFirebase } from '../backend/firebase';
 import {} from '../backend/session';
 import { Link } from 'react-router-dom';
-import Loader from 'react-loader-spinner';
+import { LoaderFullScreen } from '../frontend/Loaders';
 import * as ROLES from '../constants/roles';
 import * as STATUSES from '../constants/statuses';
 
@@ -45,12 +45,8 @@ class ThreadsList extends Component {
         <ul>
           {loading &&
 
-            <Loader
+            <LoaderFullScreen
                type="BallTriangle"
-               color="#d8d8d8"
-               height={30}
-               width={130}
-               timeout={3000} //3 secs
             />
 
           }

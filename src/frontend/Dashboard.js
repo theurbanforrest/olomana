@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
 import ThreadsListPaginated from './ThreadsListPaginated';
+import { LoaderFullScreen } from '../frontend/Loaders';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import * as STATUSES from '../constants/statuses';
 import * as DATACONFIG from '../constants/dataConfig';
@@ -31,7 +32,7 @@ class DashboardPage extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, showHiddenByAdmin } = this.state;
 
     return (
 
@@ -41,7 +42,11 @@ class DashboardPage extends Component {
               <h1>Dashboard</h1>
               <h3>Hello, {authUser.email}</h3>
 
-              {loading && <div>Loading ...</div>}
+              {loading &&
+                <LoaderFullScreen
+                  type="BallTriangle"
+                />
+              }
 
               <ThreadsListPaginated
                 title='My Threads'
@@ -50,7 +55,8 @@ class DashboardPage extends Component {
                   authUser.uid
                 ]}
                 statuses={[
-                  STATUSES.VISIBLE
+                  STATUSES.VISIBLE,
+                  STATUSES.VISIBLE_BREEDER
                 ]}
                 activePage={1}
                 pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
@@ -58,21 +64,24 @@ class DashboardPage extends Component {
                 ctaEdit
               />
 
-              <ThreadsListPaginated
-                title='Hidden By Admin'
-                authUser={authUser}
-                users={[
-                  authUser.uid
-                ]}
-                statuses={[
-                  STATUSES.HIDDEN_BY_ADMIN
-                ]}
-                activePage={1}
-                pageSize={DATACONFIG.HIDDENBYADMIN_PAGE_SIZE}
-                ctaView
-                ctaEdit
-                ctaUnhide
-              />
+              { showHiddenByAdmin &&
+                <ThreadsListPaginated
+                  title='Hidden By Admin'
+                  authUser={authUser}
+                  users={[
+                    authUser.uid
+                  ]}
+                  statuses={[
+                    STATUSES.HIDDEN_BY_ADMIN
+                  ]}
+                  activePage={1}
+                  pageSize={DATACONFIG.HIDDENBYADMIN_PAGE_SIZE}
+                  ctaView
+                  ctaEdit
+                  ctaUnhide
+                  pageSelectorVisible
+                />
+              }
 
             </div>
           )}

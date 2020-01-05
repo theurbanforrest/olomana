@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import Loader from 'react-loader-spinner';
+import { LoaderFullScreen } from '../frontend/Loaders';
 
 import { compose } from 'recompose';
 import { withFirebase } from '../backend/firebase';
 import * as ROUTES from '../constants/routes';
 import * as STATUSES from '../constants/statuses';
 import * as DATACONFIG from '../constants/dataConfig';
+import * as THEME from '../constants/theme';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import ImageCropper from '../frontend/ImageCropper';
 import ThreadImages from '../frontend/ThreadImages';
@@ -288,22 +289,18 @@ class ThreadDynamicBase extends Component {
       return(
 
         <Container>
-          {/** Loading Spinner **/ loading &&
-            <Loader
-             type="BallTriangle"
-             color="#d8d8d8"
-             height={60}
-             width={130}
-             timeout={3000} //3 secs
+          {/** Loading UX **/ loading &&
+            <LoaderFullScreen
+               type="BallTriangle"
             />
           }
           {/** Header items **/ !loading && !isEditing &&
             <Row>
               <Col md="12">
-                <h3>
-                  {thread.headline}&nbsp;
-                  - ${thread.price}
-                </h3>
+                <h2>
+                    {thread.headline}&nbsp;
+                    - ${thread.price}
+                </h2>
               </Col>
               <Col md="12">
                 <p><strong>
@@ -313,7 +310,7 @@ class ThreadDynamicBase extends Component {
             </Row>
           }
           <Row>
-            <Col md="6">
+            <Col md="6" styles={THEME.IMAGE_CAROUSEL}>
               {/** ThreadImages **/ !loading && 
                 <ThreadImages
                   firebase={firebase}
@@ -357,14 +354,9 @@ class ThreadDynamicBase extends Component {
                   md="12"
                   controlId="formBody"
                 >
-                  <Form.Control
-                    disabled={true}
-                    as="textarea"
-                    rows="10"
-                    name="staticBody"
-                    value={thread.body}
-                    type="text"
-                  />
+                  <p>
+                    {thread.body}
+                  </p>
                 </Form.Group>
               </div>
             }

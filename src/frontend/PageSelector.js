@@ -48,41 +48,42 @@ class PageSelector extends Component {
   		previous
   	} = this.state;
 
-  	let activePage = this.props.activePage;
-    let fullQuerySize = this.props.fullQuerySize;
+  	const {
+  		activePage,
+  		fullQuerySize,
+  		debug
+  	} = this.props;
 
   	return(
   		
   		<div>
-	      <h5>Page Selector</h5>
-
-	      	<p> Full query is {fullQuerySize} </p>
-	      	<h6> Previous </h6>
-	      	{previous.map(obj => (
-	        	<li key={obj.pageNum}>
-	        		{
-		        		/// <Link /> does not work because
-		        		/// it does not reload the page.  Using vanilla HTML's <a/>
-		        		//  does the job.  Future: improve this.
-		        		//
-	        		}
-	        		<a href={`/threads?page=${obj.pageNum}`}>
-	        			Page {obj.pageNum}
-	        		</a>
-	        	</li>
-	        ))}
-
-	        <h6> Active </h6>
-	      	Active Page is {activePage}
-
-	      	<h6> Next </h6>
-	        {next.map(obj => (
-	        	<li key={obj.pageNum}>
-	        		<a href={`/threads?page=${obj.pageNum}`}>
-	        			Page {obj.pageNum}
-	        		</a>
-	        	</li>
-	        ))}
+  			{debug &&
+  				<p>fullQuerySize is {fullQuerySize}</p>
+  			}
+	    	<h5>Page Selector</h5>
+      		<div>
+		      	<h6>
+		     		<table>
+		     			<tr>
+					      	{previous.map(obj => (
+				      			<td>
+				      				<a href={`/threads?page=${obj.pageNum}`}>
+				        				{obj.pageNum}
+				        			</a>
+				        		</td>
+					        ))}
+					      	<td><strong> {activePage} </strong></td>
+					        {next.map(obj => (
+				      			<td>
+				      				<a href={`/threads?page=${obj.pageNum}`}>
+				        				{obj.pageNum}
+				        			</a>
+				        		</td>
+					        ))}
+				        </tr>
+			        </table>
+		        </h6>
+	        </div>
 	    </div>
   		
   	)

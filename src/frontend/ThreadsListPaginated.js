@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { withFirebase } from '../backend/firebase';
 import {} from '../backend/session';
 import { Link } from 'react-router-dom';
-import Loader from 'react-loader-spinner';
+import { LoaderFullScreen } from '../frontend/Loaders';
 import PageSelector from './PageSelector';
 import * as ROLES from '../constants/roles';
 import * as STATUSES from '../constants/statuses';
@@ -24,8 +24,8 @@ class ThreadsListPaginated extends Component {
       threads: [],
       error: null
     };
-
   }
+
   componentDidMount() {
 
     this.getData();
@@ -62,22 +62,19 @@ class ThreadsListPaginated extends Component {
         <ul>
           {loading &&
 
-            <Loader
+            <LoaderFullScreen
                type="BallTriangle"
-               color="#d8d8d8"
-               height={60}
-               width={130}
-               timeout={3000} //3 secs
             />
 
           }
           {!loading && threads.map(thread => (
             <li key={thread.path}>
               <span>
-                <strong>Headline:</strong> {thread.data.headline}
+                <b>{thread.data.headline}</b>
               </span>
+              {` - `}
               <span>
-                <strong>Price:</strong> {thread.data.price}
+                {thread.data.price}
               </span>
                 {this.props.ctaView && 
                   <span>

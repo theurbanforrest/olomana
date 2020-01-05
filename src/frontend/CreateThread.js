@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import { compose } from 'recompose';
 
 import { withFirebase } from '../backend/firebase';
@@ -48,12 +49,12 @@ class CreateThreadFormBase extends Component {
 
       //x. Get UTC timestamp (for ordering purposes)
       //x. Get user's UID (so we know who this post belongs to)
-      //x. Set status as 1 (visible)
+      //x. Set status as 21 for BREEDERS_VISIBLE
 
       const utcCreated = new Date().getTime();
       const utcModified = utcCreated;
       let userUid = this.props.userUid;
-      let status = 1;
+      let status = 21;
 
       this.props.firebase
         .fsThreads()
@@ -107,40 +108,92 @@ class CreateThreadFormBase extends Component {
       price === 0;
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="headline"
-          value={headline}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Headline.."
-        />
-        <input
-          name="price"
-          value={price}
-          onChange={this.onChange}
-          type="number"
-          placeholder="Price.."
-        />
-        <input
-          name="body"
-          value={body}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Enter a description.."
-        />
-        <input
-          name="contact"
-          value={contact}
-          onChange={this.onChange}
-          type="textarea"
-          placeholder="e.g. Text Forrest at 808-422-2222"
-        />
-        <button disabled={isInvalid} type="submit">
-          Submit
-        </button>
-          {error && <p>{error.message}</p>}
-      </form>
+
+      <Container>
+        <Form onSubmit={this.onSubmit}>
+          
+          <Row>
+            <Form.Group
+              as={Col}
+              md="12"
+              controlId="formHeadline"
+            >
+              <Form.Control
+                disabled={false}
+                size="lg"
+                name="headline"
+                value={headline}
+                onChange={this.onChange}
+                type="text"
+                placeholder="Headline.."
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group
+              as={Col}
+              md="6"
+              controlId="formPrice"
+            >
+              <Form.Control
+                disabled={false}
+                name="price"
+                value={price}
+                onChange={this.onChange}
+                type="number"
+                placeholder="Price.."
+
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="6"
+              controlId="formContact"
+            >
+              <Form.Control
+                disabled={false}
+                name="contact"
+                value={contact}
+                onChange={this.onChange}
+                type="text"
+                placeholder="Contact.."
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group
+              as={Col}
+              md="12"
+              controlId="formBody"
+            >
+              <Form.Control
+                disabled={false}
+                as="textarea"
+                rows="10"
+                name="body"
+                value={body}
+                onChange={this.onChange}
+                type="text"
+                placeholder="Body.."
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group as={Col}>
+              <Button
+                variant="dark"
+                type="submit"
+                disabled={isInvalid ? true : false}
+              >
+              Create Thread
+              </Button>
+            </Form.Group>
+          </Row>
+        </Form>
+        {error && 
+          <h5>{error}</h5>
+        }
+      </Container>
     );
   }
 }

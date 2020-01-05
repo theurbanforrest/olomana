@@ -8,9 +8,13 @@ export const APP = {
 }
 
 export const IMAGE_CAROUSEL = {
+  "paddingBottom":"1.5em"
 
 }
 
+export const LOADER_FULL_SCREEN = {
+  "height":"24em"
+}
 export const ROUTER = {
 	"paddingTop":"6em",
   "paddingRight":"1.5em"
@@ -65,5 +69,5 @@ export const NAVBAR = {
 export const FOOTER = {
   "marginTop":"1em",
   "height":"24em",
-  "background-color":"green"
+  "backgroundColor":"green"
 }
