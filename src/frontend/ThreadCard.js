@@ -1,6 +1,5 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import * as THEME from '../constants/theme';
 
 const ThreadCard = (props) => (
@@ -16,7 +15,9 @@ const ThreadCard = (props) => (
 						<strong>{props.headline}</strong>
 					</h5>
 					<h6><strong>{props.price}</strong></h6>
-					<p>{props.body}...<h6><Link to={props.viewUrl}> View </Link></h6></p>
+					<p>{props.body}...
+						<a href={props.viewUrl}>View</a>
+					</p>
 				</Col>
 		</Row>
 	</Col>

@@ -7,6 +7,8 @@ https://github.com/theurbanforrest/olomana/issues/23
 
 ***/
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import { Container, Row } from 'react-bootstrap';
 import { withFirebase } from '../backend/firebase';
 import {} from '../backend/session';
@@ -15,7 +17,7 @@ import ThreadCard from './ThreadCard';
 import PageSelector from './PageSelector';
 import * as STATUSES from '../constants/statuses';
 
-class ThreadsListPaginatedCards extends Component {
+class ThreadsListPaginatedCardsBase extends Component {
   constructor(props) {
     super(props);
 
@@ -80,6 +82,7 @@ class ThreadsListPaginatedCards extends Component {
                   price={thread.data.price}
                   body={thread.data.body.substr(0,280)}
                   viewUrl={`thread/${thread.path}/dynamic`}
+                  viewThru={()=>this.props.history.push(`thread/${thread.path}/dynamic`)}
                   isOwner={ctaEdit && authUser.uid === thread.data.userUid ? true : false}
                 >
                 </ThreadCard>
@@ -194,6 +197,11 @@ class ThreadsListPaginatedCards extends Component {
   }
 }
 
+const ThreadsListPaginatedCards = compose(
+  withRouter,
+  withFirebase,
+)(ThreadsListPaginatedCardsBase);
+
 // This component does not manage visibility
 //
-export default withFirebase(ThreadsListPaginatedCards);
+export default ThreadsListPaginatedCards;
