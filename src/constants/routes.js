@@ -12,6 +12,7 @@ export const PASSWORD_FORGET = '/pw-forget';
 
 /// Public + firestore
 export const VIEW_ALL_THREADS = '/threads';
+export const VIEW_ALL_THREADS_PAGINATED_SLUG = '/threads?page=';
 
 
 /// Protected + static
@@ -26,6 +27,7 @@ export const THREADDYNAMIC = '/thread/:uid/dynamic';
 
 /// Protected + firestore
 export const DASHBOARD = '/dashboard';
+export const DASHBOARD_PAGINATED_SLUG = '/dashboard?page=';
 export const CREATE_THREAD = '/create-thread';
 
 

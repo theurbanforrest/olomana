@@ -71,3 +71,7 @@ export const FOOTER = {
   "height":"24em",
   "backgroundColor":"green"
 }
+
+export const THREAD_CARD = {
+  "border":"2em"
+}

@@ -1,4 +1,4 @@
-/*** ThreadsListPaginated
+/*** ThreadsListPaginatedCards
 
 A single component that can be used for multiple different scenarios of
 listing Threads
@@ -7,15 +7,15 @@ https://github.com/theurbanforrest/olomana/issues/23
 
 ***/
 import React, { Component } from 'react';
+import { Container, Row } from 'react-bootstrap';
 import { withFirebase } from '../backend/firebase';
 import {} from '../backend/session';
-import { Link } from 'react-router-dom';
-import { LoaderFullScreen } from '../frontend/Loaders';
+import { LoaderFullScreen } from './Loaders';
+import ThreadCard from './ThreadCard';
 import PageSelector from './PageSelector';
-import * as ROLES from '../constants/roles';
 import * as STATUSES from '../constants/statuses';
 
-class ThreadsListPaginated extends Component {
+class ThreadsListPaginatedCards extends Component {
   constructor(props) {
     super(props);
 
@@ -56,13 +56,16 @@ class ThreadsListPaginated extends Component {
       activePage,
       pageSize,
       paginatedSlug,
-      pageSelectorVisible
+      pageSelectorVisible,
+
+      ctaEdit,
+      authUser
+
     } = this.props;
 
     return (
-      <div>
-        <h5>{this.props.title}</h5>
-        <ul>
+      <Container>
+      <Row>
           {loading &&
 
             <LoaderFullScreen
@@ -71,38 +74,18 @@ class ThreadsListPaginated extends Component {
 
           }
           {!loading && threads.map(thread => (
-            <li key={thread.path}>
-              <span>
-                <b>{thread.data.headline}</b>
-              </span>
-              {` - `}
-              <span>
-                {thread.data.price}
-              </span>
-                {this.props.ctaView && 
-                  <span>
-                    <Link to={`thread/${thread.path}/dynamic`}> View </Link>
-                  </span>
-                }
-                { /*** Leaving in ctaEdit so user can instantly see which posts are their's ***/
-                 
-                  this.props.ctaEdit &&
-                  this.props.authUser.uid === thread.data.userUid && 
-                  <span>
-                    <Link to={`thread/${thread.path}/dynamic`}> Edit </Link>
-                  </span>
-                }
-                { this.props.ctaUnhide &&
-                  ROLES.ADMIN.includes(this.props.authUser.uid) &&
-                  <button onClick={() => 
-                  {
-                    this.onUnhideThread(thread.path)
-                  }}>
-                    Unhide
-                  </button>
-                }
-            </li>
+                <ThreadCard
+                  key={thread.path}
+                  headline={thread.data.headline}
+                  price={thread.data.price}
+                  body={thread.data.body.substr(0,280)}
+                  viewUrl={`thread/${thread.path}/dynamic`}
+                  isOwner={ctaEdit && authUser.uid === thread.data.userUid ? true : false}
+                >
+                </ThreadCard>
           ))}
+        </Row>
+        <Row>
           {!loading && pageSelectorVisible &&
 
             <PageSelector
@@ -117,9 +100,8 @@ class ThreadsListPaginated extends Component {
             <p> You have no threads. </p>
           }
           {error && <p>{error.message}</p>}
-        </ul>
-
-      </div>
+        </Row>
+      </Container>
     );
   }
 
@@ -214,4 +196,4 @@ class ThreadsListPaginated extends Component {
 
 // This component does not manage visibility
 //
-export default withFirebase(ThreadsListPaginated);
+export default withFirebase(ThreadsListPaginatedCards);

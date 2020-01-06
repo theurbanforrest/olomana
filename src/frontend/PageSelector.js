@@ -51,7 +51,8 @@ class PageSelector extends Component {
   	const {
   		activePage,
   		fullQuerySize,
-  		debug
+  		debug,
+  		paginatedSlug
   	} = this.props;
 
   	return(
@@ -67,7 +68,7 @@ class PageSelector extends Component {
 		     			<tr>
 					      	{previous.map(obj => (
 				      			<td>
-				      				<a href={`/threads?page=${obj.pageNum}`}>
+				      				<a href={`${paginatedSlug}${obj.pageNum}`}>
 				        				{obj.pageNum}
 				        			</a>
 				        		</td>
@@ -75,7 +76,7 @@ class PageSelector extends Component {
 					      	<td><strong> {activePage} </strong></td>
 					        {next.map(obj => (
 				      			<td>
-				      				<a href={`/threads?page=${obj.pageNum}`}>
+				      				<a href={`${paginatedSlug}${obj.pageNum}`}>
 				        				{obj.pageNum}
 				        			</a>
 				        		</td>
