@@ -3,8 +3,10 @@ import {} from '../backend/firebase';
 import ThreadsListPaginated from './ThreadsListPaginated';
 import { LoaderFullScreen } from '../frontend/Loaders';
 import { withAuthorization, AuthUserContext } from '../backend/session';
+import queryString from 'query-string';
 import * as STATUSES from '../constants/statuses';
 import * as DATACONFIG from '../constants/dataConfig';
+import * as ROUTES from '../constants/routes';
 
 class DashboardPage extends Component {
   constructor(props) {
@@ -13,15 +15,20 @@ class DashboardPage extends Component {
       /// Always initialize as true to prevent pre-mature rendering!
       //
       //
+      activePage: 1,
       loading: true,
-      activePage: DATACONFIG.DASHBOARD_ACTIVE_PAGE
+      error: null
 
     };
   }
   componentDidMount() {
     /// Everything handled in <ThreadsList />
 
+    const qs = queryString.parse(this.props.location.search);
+    let activePage = !qs ? qs.page : 1;
+
     this.setState({
+      activePage: activePage,
       loading: false
     })
 
@@ -32,7 +39,7 @@ class DashboardPage extends Component {
   }
 
   render() {
-    const { loading, showHiddenByAdmin } = this.state;
+    const { loading, showHiddenByAdmin, activePage } = this.state;
 
     return (
 
@@ -48,21 +55,24 @@ class DashboardPage extends Component {
                 />
               }
 
-              <ThreadsListPaginated
-                title='My Threads'
-                authUser={authUser}
-                users={[
-                  authUser.uid
-                ]}
-                statuses={[
-                  STATUSES.VISIBLE,
-                  STATUSES.VISIBLE_BREEDER
-                ]}
-                activePage={1}
-                pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
-                ctaView
-                ctaEdit
-              />
+              {!loading &&
+                <ThreadsListPaginated
+                  title='My Threads'
+                  authUser={authUser}
+                  users={[
+                    authUser.uid
+                  ]}
+                  statuses={[
+                    STATUSES.VISIBLE,
+                    STATUSES.VISIBLE_BREEDER
+                  ]}
+                  activePage={activePage}
+                  pageSize={DATACONFIG.DASHBOARD_PAGE_SIZE}
+                  paginatedSlug={ROUTES.DASHBOARD_PAGINATED_SLUG}
+                  ctaView
+                  ctaEdit
+                />
+              }
 
               { showHiddenByAdmin &&
                 <ThreadsListPaginated
@@ -74,8 +84,7 @@ class DashboardPage extends Component {
                   statuses={[
                     STATUSES.HIDDEN_BY_ADMIN
                   ]}
-                  activePage={1}
-                  pageSize={DATACONFIG.HIDDENBYADMIN_PAGE_SIZE}
+                  activePage={activePage}
                   ctaView
                   ctaEdit
                   ctaUnhide

@@ -116,8 +116,12 @@
 
 	  			fsGetThreadsList = async(inputs) => {
 
+	  				/// The logic to get the set of results is managed in this function
+	  				//
+
 	  				const users = inputs.users;
 	  				const statuses = inputs.statuses;
+	  				const pageSize = inputs.pageSize;
 	  				const activePage = inputs.activePage;
 
 				    // USERS
@@ -126,7 +130,7 @@
 				    if(users){
 				      if(users.length === 1){
 				        if(statuses) {
-				          return this.fsThreadsByUserAndStatusPaginated(users[0],statuses,activePage); //(users[0],statuses);
+				          return this.fsThreadsByUserAndStatusPaginated(users[0],statuses,pageSize,activePage); //(users[0],statuses);
 				        }
 				        else return this.fsThreadsByUser(users[0])	//TO-DO still needs to be paginated
 				      }
@@ -134,14 +138,11 @@
 				        // TO-DO in the future
 				      }
 				    }
-				    else return this.fsThreadsByStatusPaginated(statuses,activePage);
+				    else return this.fsThreadsByStatusPaginated(statuses,pageSize,activePage);
 
 	  			}
 
-	  			fsThreadsByUserAndStatusPaginated = async(uid,statusArr,pageNum) => {
-
-	  				const pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
-
+	  			fsThreadsByUserAndStatusPaginated = async(uid,statusArr,pageSize,pageNum) => {
 
 	  				return this.fsThreadsByUserAndStatus(uid,statusArr)
 	  					.get()
@@ -155,9 +156,7 @@
 
 	  			}
 
-	  			fsThreadsByStatusPaginated = async(statusArr,pageNum) => {
-
-	  				const pageSize = DATACONFIG.THREADSLIST_PAGE_SIZE;
+	  			fsThreadsByStatusPaginated = async(statusArr,pageSize,pageNum) => {
 
 	  				return this.fsThreadsByStatus(statusArr)
 	  					.get()

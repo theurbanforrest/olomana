@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import {} from '../backend/firebase';
 import queryString from 'query-string';
 import { withAuthorization, AuthUserContext } from '../backend/session';
-import ThreadsListPaginated from './ThreadsListPaginated';
+import ThreadsListPaginatedCards from './ThreadsListPaginatedCards';
 import * as STATUSES from '../constants/statuses';
 import * as DATACONFIG from '../constants/dataConfig';
+import * as ROUTES from '../constants/routes';
 
 
 class ViewAllThreadsPage extends Component {
@@ -56,14 +57,16 @@ class ViewAllThreadsPage extends Component {
               /// Rendered with !loading to prevent error from trying to load from undefined
               //
               //
-              <ThreadsListPaginated
+              <ThreadsListPaginatedCards
                 statuses={[
                   STATUSES.VISIBLE,
                   STATUSES.VISIBLE_BREEDER
                 ]}
+                title={'ViewAllThreads'}
                 authUser={authUser}
                 activePage={activePage}
-                pageSize={DATACONFIG.THREADSLIST_PAGE_SIZE}
+                pageSize={DATACONFIG.VIEWALLTHREADS_PAGE_SIZE}
+                paginatedSlug={ROUTES.VIEW_ALL_THREADS_PAGINATED_SLUG}
                 pageSelectorVisible
                 ctaView
                 ctaEdit

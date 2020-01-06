@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner';
 
 export const LoaderSmall = (props) => (
 	<Loader
-		type={this.props.type}
+		type={props.type}
 		color="#d8d8d8"
 		height={30}
 		width={130}
