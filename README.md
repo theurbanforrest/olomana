@@ -1,10 +1,12 @@
 # Olomana
 A digital product starter based on ReactJS and Firebase
-BIG props to Robin Wieruch's starter guide: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth
+
+##### Props First
+BIG ups to Robin Wieruch's starter guide: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial#react-router-for-firebase-auth .  Highly recommended for anyone looking to give a full stack web app a go.
 
 ### Getting Started
 
-##### Configure Firebase
+##### 1. Configure Firebase
 
 Create a new `.env.local` file in project's root with your Firebase creds:
 ```bash
@@ -20,25 +22,51 @@ Create a new `.env.local` file in project's root with your Firebase creds:
 
 These come straight from the Firebase console's settings. You need to convert from JSON to these REACT_APP_ prefixed vars.
 
-##### Run Locally
+##### 2. Run Locally
 
-Now you can run the app locally:
+Make sure you have npm installed (and that's all you need).  Run via command line:
 
 ```bash
 npm install
 npm start
 ```
 
+###### Awesome functions out-of-the-box!
 * App is now open on https://localhost:3000
-* Sign Up, Log In functions are connected to your Firebase project.  You can see new users getting added in Authentication.
-* Adding a user also logs a record in your Real-Time Database (RTD).
+* Firebase Authentication: users who Sign Up or Log In now appear here
+* Firebase Realtime Database: user records are also managed here.  Future: can use this to show who is currently online & connected
 
+* Firebase Cloud Firestore: threads are kept here
+* Firebase Storage: images uploaded by users are kept here
+
+###### Privileged activity
 * /account and /home are only shown if you are logged in.  Else you get redirected back to /login.
-* /admin shows a list of all users, pulled from the RTD.
+* /dashboard gets only the docs from 'threads' that belong to the logged in user.
+
+##### 3. Deploy
+
+It's a good idea to set up 2 projects: 1 Beta and 1 Production.  When ready to deploy to an environment, it's easy.  Run via command line:
+
+```bash
+npm run-script build
+firebase use name-of-your-firebase-project
+firebase deploy
+```
+
+Note that .env.local applies to both environments.  For environment-specific configs, we need to still get this from a service (still TBD - likely Firebase SiteConfig)
 
 
-### Mahalo Open Source!
+### Firebase
 
+Firebase was chosen as our backend because of its near turnkey functions, thorough docs, and freemium model.  Services this project uses:
+
+
+* Authentication: the Source Of Record (SOR) for all unique users
+* Realtime Database: $$ by connection, not action.  Therefore, using for common lookups (i.e. /users for user data) and future online/offline features.  Does not scale well but not a near-term issue.
+* Firestore: Great NoSQL db for querying and pagination, both of which we will use heavily.  Also scales better supposedly.
+* Storage: For user-upload files (i.e. images for Threads)
+
+<<<<<<< HEAD
 * create-react-app
 * react-router-dom
 * recompose
@@ -53,4 +81,10 @@ npm start
 * `master`: completion of Robin Wieruch's tutorial
 * `develop`: Create Thread capability
 * `feature/v1-posts`: WIP on View All & View My
+=======
+### Active Branches
+
+`master` is the completion of Robin Wieruch's tutorial
+`develop` is working towards completion of a true boilerplate
+>>>>>>> 4957a0868daee7af9a2c2c622cb5970dd6fa92e7
 
