@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {} from '../backend/firebase';
-import ThreadsListPaginated from './ThreadsListPaginated';
+import ThreadsListPaginatedCards from './ThreadsListPaginatedCards';
 import { LoaderFullScreen } from '../frontend/Loaders';
 import { withAuthorization, AuthUserContext } from '../backend/session';
 import queryString from 'query-string';
@@ -56,7 +56,7 @@ class DashboardPage extends Component {
               }
 
               {!loading &&
-                <ThreadsListPaginated
+                <ThreadsListPaginatedCards
                   title='My Threads'
                   authUser={authUser}
                   users={[
@@ -75,7 +75,7 @@ class DashboardPage extends Component {
               }
 
               { showHiddenByAdmin &&
-                <ThreadsListPaginated
+                <ThreadsListPaginatedCards
                   title='Hidden By Admin'
                   authUser={authUser}
                   users={[

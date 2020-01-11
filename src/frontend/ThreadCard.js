@@ -4,7 +4,7 @@ import * as THEME from '../constants/theme';
 
 const ThreadCard = (props) => (
 
-	<Col lg="12" styles={THEME.THREAD_CARD}>
+	<Col lg="12" style={THEME.THREAD_CARD}>
 		<Row>
 			{/** badge **/}
 				<Col lg="3" xs="3">

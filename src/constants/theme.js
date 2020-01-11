@@ -73,5 +73,5 @@ export const FOOTER = {
 }
 
 export const THREAD_CARD = {
-  "border":"2em"
+  "paddingTop":"2em"
 }
