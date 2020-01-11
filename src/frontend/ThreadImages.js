@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Loader from 'react-loader-spinner';
 import { withFirebase } from '../backend/firebase';
 import {
-  Carousel
+  Carousel, Button
 } from 'react-bootstrap';
 import * as THEME from '../constants/theme'
 
@@ -68,6 +68,7 @@ class ThreadImages extends Component {
   }
 
   render() {
+    const { isEditing } = this.props;
     const { imageUrls, loading, error, index, direction } = this.state;
 
     return(
@@ -80,6 +81,13 @@ class ThreadImages extends Component {
              width={130}
              timeout={3000} //3 secs
             />
+          }
+          {!loading && isEditing &&
+            <Button
+              onClick={() => this.setDefaultImage()}
+            >
+              Set as Default
+            </Button>
           }
           {!loading &&
             <Carousel
@@ -114,6 +122,24 @@ class ThreadImages extends Component {
       index: selectedIndex,
       direction: e.direction,
     });
+  }
+
+  setDefaultImage() {
+
+    const { threadUid, firebase } = this.props;
+    const { index, imageUrls } = this.state;
+
+    firebase
+      .fsThread(threadUid)
+      .update({
+
+        defaultImageUrl: imageUrls[index]
+
+      })
+      .then(() => {
+        alert('success!')
+      })
+      .catch(err => alert(err.message));
   }
 }
 

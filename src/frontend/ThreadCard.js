@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Image } from 'react-bootstrap';
 import * as THEME from '../constants/theme';
 
 const ThreadCard = (props) => (
@@ -7,10 +7,11 @@ const ThreadCard = (props) => (
 	<Col lg="12" styles={THEME.THREAD_CARD}>
 		<Row>
 			{/** badge **/}
-				<Col lg="1" xs="2">
+				<Col lg="3" xs="3">
+					<Image src={props.thumbnailUrl} fluid />
 				</Col>
 			{/** info **/}
-				<Col lg="11" xs="10">
+				<Col lg="9" xs="9">
 					<h5>
 						<strong>{props.headline}</strong>
 					</h5>

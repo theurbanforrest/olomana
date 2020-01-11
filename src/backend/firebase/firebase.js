@@ -112,6 +112,11 @@
 	  				.where('status','in',statusArr)
 
 
+	  			fsThreadSetThumbnail = uid => this.firestore
+	  				.collection(`threads`)
+	  				.doc(`${uid}`)
+	  				
+
 	  		// *** ThreadsList ***
 
 	  			fsGetThreadsList = async(inputs) => {

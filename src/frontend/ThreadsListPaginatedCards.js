@@ -81,6 +81,7 @@ class ThreadsListPaginatedCardsBase extends Component {
                   headline={thread.data.headline}
                   price={thread.data.price}
                   body={thread.data.body.substr(0,280)}
+                  thumbnailUrl={thread.data.defaultImageUrl}
                   viewUrl={`thread/${thread.path}/dynamic`}
                   viewThru={()=>this.props.history.push(`thread/${thread.path}/dynamic`)}
                   isOwner={ctaEdit && authUser.uid === thread.data.userUid ? true : false}

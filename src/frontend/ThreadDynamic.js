@@ -316,6 +316,7 @@ class ThreadDynamicBase extends Component {
                   firebase={firebase}
                   threadUid={threadUid}
                   storageRootPath={DATACONFIG.IMAGECROPPER_STORAGE_ROOT_PATH}
+                  isEditing={isEditing}
                 />
               }
             </Col>
