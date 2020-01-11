@@ -6,6 +6,8 @@ export const HIDDENBYADMIN_PAGE_SIZE = 10;
 export const DASHBOARD_ACTIVE_PAGE = 1;
 export const DASHBOARD_PAGE_SIZE = 25;
 
+export const THREADDYNAMIC_TEXTAREA_ROWS = 15;
+
 export const VIEWALLTHREADS_PAGE_SIZE = 25;
 export const THREADIMAGES_GET_LIMIT = 12;
 

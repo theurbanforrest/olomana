@@ -83,11 +83,15 @@ class ThreadImages extends Component {
             />
           }
           {!loading && isEditing &&
-            <Button
-              onClick={() => this.setDefaultImage()}
-            >
-              Set as Default
-            </Button>
+            <div>
+              <Button
+                onClick={() => this.setDefaultImage()}
+              >
+                Set as Default
+              </Button>
+              <div style={{"paddingBottom":"2em"}}>
+              </div>
+            </div>
           }
           {!loading &&
             <Carousel
