@@ -1,15 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import { Navbar } from 'react-bootstrap';
 import { AuthUserContext } from '../backend/session';
 import * as ROUTES from '../constants/routes';
 import * as ROLES from '../constants/roles';
 import SignOutButton from './SignOutButton';
 import { slide as SuperMenu } from 'react-burger-menu';
 import * as THEME from '../constants/theme';
-import {
-  Button
-} from 'react-bootstrap';
 
 const Navigation = () => (
   <div>
@@ -27,52 +24,31 @@ const NavigationAuth = ({ authUser }) => (
     outerContainerId='root'
     styles={THEME.NAVBAR}
   >
-    <Button
-      href={ROUTES.LANDING}
-      block
-    >
-      Landing
-    </Button>
-    <Button
-      href={ROUTES.DASHBOARD}
-      block
-    >
-      Dashboard
-    </Button>
-    <Button
-      href='/threads?page=1'
-      block
-    >
-      View All
-    </Button>
-    <Button
-      href={ROUTES.HOME}
-      block
-    >
-      Home
-    </Button>
-    <Button
-      href={ROUTES.ACCOUNT}
-      block
-    >
-      Account
-    </Button>
+
+    <Navbar.Brand href={ROUTES.LANDING}>
+      <img
+        alt=""
+        src="/favicon.ico"
+        width="30"
+        height="30"
+        className="d-inline-block align-top"
+      />
+        {' '}Project Olomana
+    </Navbar.Brand>
+
+    <Navbar.Brand href={ROUTES.DASHBOARD}>Dashboard</Navbar.Brand>
+    <Navbar.Brand href="/threads?page=1">View All</Navbar.Brand>
+    <Navbar.Brand href={ROUTES.HOME}>Home</Navbar.Brand>
+    <Navbar.Brand href={ROUTES.ACCOUNT}>Account</Navbar.Brand>
+    <Navbar.Brand href={ROUTES.CREATE_THREAD}>Create Thread</Navbar.Brand>
+
+    <SignOutButton />
 
     {!!authUser && ROLES.ADMIN.includes(authUser.uid) && (
-          <Button
-            href={ROUTES.ADMIN}
-            block
-          >
-            Admin
-          </Button>
-      )}
-      <Button
-        href={ROUTES.CREATE_THREAD}
-        block
-      >
-        Create Thread
-      </Button>
-      <SignOutButton />
+
+      <Navbar.Brand href={ROUTES.ADMIN}>Admin Tools</Navbar.Brand>
+
+    )}
   </SuperMenu>
 );
 const NavigationNonAuth = () => (

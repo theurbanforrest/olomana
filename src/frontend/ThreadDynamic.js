@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Badge, Container, Row, Col } from 'react-bootstrap';
 import { LoaderFullScreen } from '../frontend/Loaders';
 
 import { compose } from 'recompose';
@@ -303,9 +303,7 @@ class ThreadDynamicBase extends Component {
                 </h2>
               </Col>
               <Col md="12">
-                <p><strong>
-                  {thread.contact}
-                </strong></p>
+                <Badge variant="info">Info</Badge>
               </Col>
             </Row>
           }
@@ -349,17 +347,35 @@ class ThreadDynamicBase extends Component {
               </Container>
             }
             {/** Body displayed **/ !loading && !isEditing &&
-              <div>
-                <Form.Group
-                  as={Col}
-                  md="12"
-                  controlId="formBody"
-                >
-                  <p>
-                    {thread.body}
-                  </p>
-                </Form.Group>
-              </div>
+              <Container>
+                <Row>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="formBody"
+                  >
+                    <p>
+                      {thread.body}
+                    </p>
+                  </Form.Group>
+                </Row>
+                <Row>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={()=>this.setState({isEditing: true})}
+                  >
+                    Contact
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={()=>this.setState({isEditing: true})}
+                  >
+                    Visit Website
+                  </Button>
+                </Row>
+              </Container>
             }
             {/** Editing mode **/ !loading && isEditing &&
               <Container>
@@ -416,7 +432,7 @@ class ThreadDynamicBase extends Component {
                     </Form.Group>
                     <Form.Group
                       as={Col}
-                      md="6"
+                      md="12"
                       controlId="formContact"
                     >
                       <Form.Control
@@ -438,7 +454,7 @@ class ThreadDynamicBase extends Component {
                       <Form.Control
                         disabled={isEditing ? false : true}
                         as="textarea"
-                        rows="10"
+                        rows={DATACONFIG.THREADDYNAMIC_TEXTAREA_ROWS}
                         name="body"
                         value={body}
                         onChange={this.onChange}
